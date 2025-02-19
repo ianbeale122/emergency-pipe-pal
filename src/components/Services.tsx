@@ -1,5 +1,5 @@
 
-import { Calendar, Tool, Wrench } from "lucide-react";
+import { Wrench, CalendarDays, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const services = [
@@ -7,19 +7,19 @@ const services = [
     title: "Emergency Repairs",
     description:
       "24/7 emergency plumbing service for urgent issues like burst pipes, boiler breakdowns, or flooding.",
-    icon: Tool,
+    icon: Wrench,
   },
   {
     title: "Annual Boiler Service",
     description:
       "Comprehensive boiler maintenance to ensure efficiency and prevent unexpected breakdowns.",
-    icon: Calendar,
+    icon: CalendarDays,
   },
   {
     title: "General Plumbing",
     description:
       "From leaky taps to complete bathroom installations, we handle all plumbing needs.",
-    icon: Wrench,
+    icon: Settings,
   },
 ];
 
