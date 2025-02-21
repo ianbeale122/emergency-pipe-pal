@@ -6,29 +6,29 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --foreground: 20 7% 33%;
     
-    --primary: 215 28% 17%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 27 98% 56%;
+    --primary-foreground: 0 0% 100%;
  
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 20 10% 93%;
+    --secondary-foreground: 20 7% 33%;
  
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 20 10% 93%;
+    --muted-foreground: 20 7% 44%;
  
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 27 98% 56%;
+    --accent-foreground: 0 0% 100%;
  
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 15 100% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --emergency: 0 72% 51%;
-    --emergency-foreground: 210 40% 98%;
+    --emergency: 15 100% 55%;
+    --emergency-foreground: 0 0% 100%;
  
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 20 10% 90%;
+    --input: 20 10% 90%;
+    --ring: 27 98% 56%;
  
     --radius: 0.5rem;
   }
@@ -44,4 +44,24 @@
   .emergency-button {
     @apply fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-emergency px-6 py-3 text-emergency-foreground shadow-lg transition-all hover:scale-105 hover:bg-emergency/90;
   }
+}
+
+.from-gray-50 {
+  --tw-gradient-from: #FEF7CD;
+}
+
+.to-gray-100 {
+  --tw-gradient-to: #FEC6A1;
+}
+
+.bg-gray-50 {
+  background-color: #FEF7CD;
+}
+
+.text-gray-600 {
+  color: #555555;
+}
+
+.hover\:bg-gray-100:hover {
+  background-color: #FEC6A1;
 }
