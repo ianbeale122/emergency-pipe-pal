@@ -17,8 +17,15 @@ export const Navigation = () => {
     <nav className="bg-white shadow-sm">
       <div className="container px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="font-bold text-xl text-primary">
-            GPS PLUMBING
+          <Link to="/" className="flex items-center gap-2">
+            <img 
+              src="/lovable-uploads/6c4f1fb6-e6ec-4ae1-9b8e-c18cce73a22d.png" 
+              alt="GPS Plumbing Logo" 
+              className="h-10 w-auto"
+            />
+            <span className="font-bold text-xl text-primary">
+              GPS PLUMBING
+            </span>
           </Link>
           <div className="hidden md:flex space-x-4">
             {links.map((link) => (
