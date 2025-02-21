@@ -18,7 +18,7 @@ export const Navigation = () => {
       <div className="container px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="font-bold text-xl text-primary">
-            Emergency Pipe Pal
+            GPS PLUMBING
           </Link>
           <div className="hidden md:flex space-x-4">
             {links.map((link) => (
