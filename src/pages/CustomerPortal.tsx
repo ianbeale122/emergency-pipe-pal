@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, FileCertificate, Receipt, Download, Search, Calendar } from "lucide-react";
+import { FileText, FileCheck, Receipt, Download, Search, Calendar } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // Mock data for certificates and invoices
@@ -71,7 +71,7 @@ const CustomerPortal = () => {
         <Tabs defaultValue="certificates" onValueChange={setActiveTab} className="w-full">
           <TabsList className="mb-4">
             <TabsTrigger value="certificates" className="flex items-center gap-2">
-              <FileCertificate className="h-4 w-4" />
+              <FileCheck className="h-4 w-4" />
               <span>Certificates</span>
             </TabsTrigger>
             <TabsTrigger value="invoices" className="flex items-center gap-2">
