@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { TabsContent } from "@/components/ui/tabs";
@@ -72,7 +71,7 @@ const CustomerPortal = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto max-w-5xl px-4 py-6">
         <div className="mb-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -85,7 +84,7 @@ const CustomerPortal = () => {
             {/* Mobile menu button */}
             <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
               <SheetTrigger asChild className="sm:hidden">
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="shadow-sm">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
@@ -99,6 +98,7 @@ const CustomerPortal = () => {
                       setMenuOpen(false);
                     }}
                   >
+                    <Home className="h-5 w-5 mr-2" />
                     Dashboard
                   </Button>
                   <Button
@@ -109,6 +109,7 @@ const CustomerPortal = () => {
                       setMenuOpen(false);
                     }}
                   >
+                    <FileCheck className="h-5 w-5 mr-2" />
                     Certificates
                   </Button>
                   <Button
@@ -119,6 +120,7 @@ const CustomerPortal = () => {
                       setMenuOpen(false);
                     }}
                   >
+                    <Receipt className="h-5 w-5 mr-2" />
                     Invoices
                   </Button>
                   <Button
@@ -129,6 +131,7 @@ const CustomerPortal = () => {
                       setMenuOpen(false);
                     }}
                   >
+                    <HelpCircle className="h-5 w-5 mr-2" />
                     Video Tutorials
                   </Button>
                 </div>
@@ -149,7 +152,7 @@ const CustomerPortal = () => {
           onTabChange={setActiveTab}
         >
           {/* Dashboard Tab */}
-          <TabsContent value="dashboard">
+          <TabsContent value="dashboard" className="animate-fade-in">
             <DashboardTab 
               stats={mockStats}
               certificates={mockCertificates}
@@ -160,7 +163,7 @@ const CustomerPortal = () => {
           </TabsContent>
           
           {/* Certificates Tab */}
-          <TabsContent value="certificates">
+          <TabsContent value="certificates" className="animate-fade-in">
             <CertificatesTab 
               certificates={filteredCertificates}
               onDownload={handleDownload}
@@ -168,7 +171,7 @@ const CustomerPortal = () => {
           </TabsContent>
           
           {/* Invoices Tab */}
-          <TabsContent value="invoices">
+          <TabsContent value="invoices" className="animate-fade-in">
             <InvoicesTab 
               invoices={filteredInvoices}
               onDownload={handleDownload}
@@ -176,7 +179,7 @@ const CustomerPortal = () => {
           </TabsContent>
           
           {/* FAQ Video Tutorials Tab */}
-          <TabsContent value="faq">
+          <TabsContent value="faq" className="animate-fade-in">
             <FaqVideosTab 
               videos={filteredFaqVideos}
               onPlay={playVideo}

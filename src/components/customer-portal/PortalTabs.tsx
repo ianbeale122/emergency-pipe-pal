@@ -30,24 +30,36 @@ const PortalTabs = ({ activeTab, onTabChange, children }: PortalTabsProps) => {
 
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <div className="relative">
+      <div className="sticky top-0 z-10 bg-background pt-2 pb-1 border-b border-border/40">
         <TabsList 
           ref={tabsListRef}
-          className="mb-4 flex whitespace-nowrap p-1 w-full overflow-x-auto scrollbar-hide"
+          className="mb-2 flex whitespace-nowrap p-1 w-full overflow-x-auto scrollbar-hide rounded-md"
         >
-          <TabsTrigger value="dashboard" className="flex items-center gap-2 min-w-max">
+          <TabsTrigger 
+            value="dashboard" 
+            className="flex items-center gap-2 min-w-max py-2 px-4"
+          >
             <Home className="h-4 w-4" />
             <span className="hidden xs:inline">Dashboard</span>
           </TabsTrigger>
-          <TabsTrigger value="certificates" className="flex items-center gap-2 min-w-max">
+          <TabsTrigger 
+            value="certificates" 
+            className="flex items-center gap-2 min-w-max py-2 px-4"
+          >
             <FileCheck className="h-4 w-4" />
             <span className="hidden xs:inline">Certificates</span>
           </TabsTrigger>
-          <TabsTrigger value="invoices" className="flex items-center gap-2 min-w-max">
+          <TabsTrigger 
+            value="invoices" 
+            className="flex items-center gap-2 min-w-max py-2 px-4"
+          >
             <Receipt className="h-4 w-4" />
             <span className="hidden xs:inline">Invoices</span>
           </TabsTrigger>
-          <TabsTrigger value="faq" className="flex items-center gap-2 min-w-max">
+          <TabsTrigger 
+            value="faq" 
+            className="flex items-center gap-2 min-w-max py-2 px-4"
+          >
             <HelpCircle className="h-4 w-4" />
             <span className="hidden xs:inline">Video Tutorials</span>
           </TabsTrigger>
@@ -58,7 +70,9 @@ const PortalTabs = ({ activeTab, onTabChange, children }: PortalTabsProps) => {
         )}
       </div>
       
-      {children}
+      <div className="py-4">
+        {children}
+      </div>
     </Tabs>
   );
 };
