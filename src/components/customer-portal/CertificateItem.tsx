@@ -20,30 +20,30 @@ type CertificateItemProps = {
 const CertificateItem = ({ certificate, onDownload }: CertificateItemProps) => {
   return (
     <Card key={certificate.id} className="transition-all hover:shadow-md">
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <span>{certificate.name}</span>
-          <span className={`text-sm px-2 py-1 rounded-full ${
+      <CardHeader className="pb-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <CardTitle className="text-lg">{certificate.name}</CardTitle>
+          <span className={`text-xs px-2 py-1 rounded-full ${
             certificate.status === "Valid" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
           }`}>
             {certificate.status}
           </span>
-        </CardTitle>
-        <CardDescription>Certificate ID: {certificate.id}</CardDescription>
+        </div>
+        <CardDescription className="text-xs sm:text-sm">Certificate ID: {certificate.id}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-2 text-sm">
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span>Issued: {new Date(certificate.date).toLocaleDateString()}</span>
+            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="truncate">Issued: {new Date(certificate.date).toLocaleDateString()}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span>Expires: {new Date(certificate.expires).toLocaleDateString()}</span>
+            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="truncate">Expires: {new Date(certificate.expires).toLocaleDateString()}</span>
           </div>
-          <div className="flex items-center gap-2 md:col-span-2">
-            <FileText className="h-4 w-4 text-muted-foreground" />
-            <span>Property: {certificate.property}</span>
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="truncate">Property: {certificate.property}</span>
           </div>
         </div>
       </CardContent>
@@ -54,7 +54,7 @@ const CertificateItem = ({ certificate, onDownload }: CertificateItemProps) => {
           onClick={() => onDownload(certificate.id, "Certificate")}
         >
           <Download className="h-4 w-4" />
-          <span>Download</span>
+          <span className="hidden sm:inline">Download</span>
         </Button>
       </CardFooter>
     </Card>

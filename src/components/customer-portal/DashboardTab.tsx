@@ -28,7 +28,7 @@ const DashboardTab = ({
 }: DashboardTabProps) => {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {stats.map((stat, index) => (
           <StatCard 
             key={index}
@@ -42,8 +42,8 @@ const DashboardTab = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="transition-all hover:shadow-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Calendar className="h-5 w-5 text-purple-500" />
               <span>Recent Certificates</span>
             </CardTitle>
@@ -51,11 +51,13 @@ const DashboardTab = ({
           <CardContent>
             {certificates.slice(0, 2).map((cert) => (
               <div key={cert.id} className="flex items-center justify-between mb-4 last:mb-0">
-                <div>
-                  <p className="font-medium">{cert.name}</p>
-                  <p className="text-sm text-muted-foreground">Expires: {new Date(cert.expires).toLocaleDateString()}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium truncate">{cert.name}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Expires: {new Date(cert.expires).toLocaleDateString()}
+                  </p>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full ${
+                <span className={`text-xs px-2 py-1 rounded-full ml-2 ${
                   cert.status === "Valid" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                 }`}>
                   {cert.status}
@@ -75,8 +77,8 @@ const DashboardTab = ({
         </Card>
         
         <Card className="transition-all hover:shadow-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <Receipt className="h-5 w-5 text-blue-500" />
               <span>Recent Invoices</span>
             </CardTitle>
@@ -84,11 +86,13 @@ const DashboardTab = ({
           <CardContent>
             {invoices.slice(0, 2).map((invoice) => (
               <div key={invoice.id} className="flex items-center justify-between mb-4 last:mb-0">
-                <div>
-                  <p className="font-medium">{invoice.description}</p>
-                  <p className="text-sm text-muted-foreground">Due: {new Date(invoice.date).toLocaleDateString()}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium truncate">{invoice.description}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Due: {new Date(invoice.date).toLocaleDateString()}
+                  </p>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full ${
+                <span className={`text-xs px-2 py-1 rounded-full ml-2 ${
                   invoice.status === "Paid" ? "bg-green-100 text-green-800" : 
                   invoice.status === "Pending" ? "bg-yellow-100 text-yellow-800" : 
                   "bg-red-100 text-red-800"
