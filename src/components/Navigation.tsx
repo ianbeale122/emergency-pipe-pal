@@ -6,10 +6,10 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from "@clerk/clerk-react";
 
-// Check if Clerk is available
+// Check if Clerk is available using a safer approach
 const isClerkAvailable = () => {
   try {
-    return typeof window !== 'undefined' && !!window.Clerk;
+    return typeof window !== 'undefined' && 'Clerk' in window;
   } catch (e) {
     return false;
   }

@@ -17,10 +17,10 @@ import SignUp from "./pages/SignUp";
 
 const queryClient = new QueryClient();
 
-// Check if Clerk is available by seeing if window.Clerk exists
+// Check if Clerk is available using a safer approach
 const isClerkAvailable = () => {
   try {
-    return typeof window !== 'undefined' && !!window.Clerk;
+    return typeof window !== 'undefined' && 'Clerk' in window;
   } catch (e) {
     return false;
   }
