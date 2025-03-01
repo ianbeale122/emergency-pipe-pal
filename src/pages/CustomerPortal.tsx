@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
-import { Menu } from "lucide-react";
+import { Menu, Home, FileCheck, Receipt, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
