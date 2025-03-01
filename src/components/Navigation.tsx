@@ -15,6 +15,7 @@ export const Navigation = () => {
     { href: "/chat", label: "Live Chat" },
     { href: "/annual-service", label: "Annual Service" },
     { href: "/emergency", label: "Emergency" },
+    { href: "/customer-portal", label: "Customer Portal" },
   ];
 
   return (

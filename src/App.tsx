@@ -10,6 +10,7 @@ import FAQ from "./pages/FAQ";
 import LiveChat from "./pages/LiveChat";
 import AnnualService from "./pages/AnnualService";
 import Emergency from "./pages/Emergency";
+import CustomerPortal from "./pages/CustomerPortal";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/chat" element={<LiveChat />} />
           <Route path="/annual-service" element={<AnnualService />} />
           <Route path="/emergency" element={<Emergency />} />
+          <Route path="/customer-portal" element={<CustomerPortal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
