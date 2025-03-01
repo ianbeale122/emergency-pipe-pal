@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { useUser } from "@clerk/clerk-react";
 import { Navigation } from "@/components/Navigation";
 import { TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
@@ -29,7 +28,13 @@ const CustomerPortal = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [menuOpen, setMenuOpen] = useState(false);
   const { toast } = useToast();
-  const { user } = useUser();
+  
+  // Replace Clerk's useUser with a mock user
+  const user = {
+    firstName: "Demo",
+    lastName: "User",
+    email: "demo@example.com"
+  };
 
   const filteredCertificates = mockCertificates.filter(cert => 
     cert.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
