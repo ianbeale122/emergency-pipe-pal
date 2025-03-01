@@ -89,7 +89,7 @@ export const Navigation = () => {
           {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden">
             <SignedIn>
-              <UserButton afterSignOutUrl="/" className="mr-2" />
+              <UserButton afterSignOutUrl="/" />
             </SignedIn>
             <Button
               variant="ghost"
