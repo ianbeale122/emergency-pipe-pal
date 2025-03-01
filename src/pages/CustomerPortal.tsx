@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 import { Navigation } from "@/components/Navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +27,7 @@ const CustomerPortal = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("certificates");
   const { toast } = useToast();
+  const { user } = useUser();
 
   const filteredCertificates = mockCertificates.filter(cert => 
     cert.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -52,7 +54,9 @@ const CustomerPortal = () => {
       
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Customer Portal</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            {user?.firstName ? `${user.firstName}'s Portal` : 'Customer Portal'}
+          </h1>
           <p className="text-muted-foreground">View and manage your certificates and invoices</p>
         </div>
         
