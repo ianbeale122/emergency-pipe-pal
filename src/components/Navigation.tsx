@@ -6,9 +6,19 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from "@clerk/clerk-react";
 
+// Check if Clerk is available
+const isClerkAvailable = () => {
+  try {
+    return typeof window !== 'undefined' && !!window.Clerk;
+  } catch (e) {
+    return false;
+  }
+};
+
 export const Navigation = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const clerkAvailable = isClerkAvailable();
 
   const links = [
     { href: "/", label: "Home" },
@@ -18,7 +28,7 @@ export const Navigation = () => {
     { href: "/emergency", label: "Emergency" },
   ];
 
-  // Protected link that only shows when signed in
+  // Protected link that only shows when signed in or when Clerk is not available
   const protectedLinks = [
     { href: "/customer-portal", label: "Customer Portal" },
   ];
@@ -52,45 +62,76 @@ export const Navigation = () => {
               </Link>
             ))}
             
-            <SignedIn>
-              {protectedLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={cn(
-                    "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                    location.pathname === link.href
-                      ? "bg-primary text-primary-foreground"
-                      : "text-gray-600 hover:bg-gray-100"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </SignedIn>
+            {clerkAvailable ? (
+              <SignedIn>
+                {protectedLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={cn(
+                      "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      location.pathname === link.href
+                        ? "bg-primary text-primary-foreground"
+                        : "text-gray-600 hover:bg-gray-100"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </SignedIn>
+            ) : (
+              // Show protected links when Clerk is not available
+              <>
+                {protectedLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={cn(
+                      "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      location.pathname === link.href
+                        ? "bg-primary text-primary-foreground"
+                        : "text-gray-600 hover:bg-gray-100"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </>
+            )}
             
             <div className="pl-4 border-l border-gray-200">
-              <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-              </SignedIn>
-              <SignedOut>
-                <div className="flex items-center gap-2">
-                  <SignInButton mode="modal">
-                    <Button variant="outline" size="sm">Sign In</Button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <Button size="sm">Sign Up</Button>
-                  </SignUpButton>
+              {clerkAvailable ? (
+                <>
+                  <SignedIn>
+                    <UserButton afterSignOutUrl="/" />
+                  </SignedIn>
+                  <SignedOut>
+                    <div className="flex items-center gap-2">
+                      <SignInButton mode="modal">
+                        <Button variant="outline" size="sm">Sign In</Button>
+                      </SignInButton>
+                      <SignUpButton mode="modal">
+                        <Button size="sm">Sign Up</Button>
+                      </SignUpButton>
+                    </div>
+                  </SignedOut>
+                </>
+              ) : (
+                // Show a message or dummy button when Clerk is not available
+                <div className="text-xs text-gray-500">
+                  Auth disabled
                 </div>
-              </SignedOut>
+              )}
             </div>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden">
-            <SignedIn>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
+            {clerkAvailable && (
+              <SignedIn>
+                <UserButton afterSignOutUrl="/" />
+              </SignedIn>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -120,34 +161,57 @@ export const Navigation = () => {
               </Link>
             ))}
             
-            <SignedIn>
-              {protectedLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={cn(
-                    "block px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                    location.pathname === link.href
-                      ? "bg-primary text-primary-foreground"
-                      : "text-gray-600 hover:bg-gray-100"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </SignedIn>
+            {clerkAvailable ? (
+              <SignedIn>
+                {protectedLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={cn(
+                      "block px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      location.pathname === link.href
+                        ? "bg-primary text-primary-foreground"
+                        : "text-gray-600 hover:bg-gray-100"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </SignedIn>
+            ) : (
+              // Show protected links when Clerk is not available
+              <>
+                {protectedLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={cn(
+                      "block px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                      location.pathname === link.href
+                        ? "bg-primary text-primary-foreground"
+                        : "text-gray-600 hover:bg-gray-100"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </>
+            )}
             
-            <SignedOut>
-              <div className="mt-3 space-y-2 px-3">
-                <SignInButton mode="modal">
-                  <Button variant="outline" className="w-full">Sign In</Button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <Button className="w-full">Sign Up</Button>
-                </SignUpButton>
-              </div>
-            </SignedOut>
+            {clerkAvailable && (
+              <SignedOut>
+                <div className="mt-3 space-y-2 px-3">
+                  <SignInButton mode="modal">
+                    <Button variant="outline" className="w-full">Sign In</Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button className="w-full">Sign Up</Button>
+                  </SignUpButton>
+                </div>
+              </SignedOut>
+            )}
           </div>
         )}
       </div>
