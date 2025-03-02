@@ -157,6 +157,20 @@ const FAQ = () => {
     }, 2000);
   };
 
+  // Function to create input element with proper event typing
+  const createFileInput = (accept: string, capture: string) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = accept;
+    input.capture = capture;
+    input.onchange = (e) => {
+      // Cast the event to the correct type
+      const inputEvent = e as unknown as React.ChangeEvent<HTMLInputElement>;
+      handleFileChange(inputEvent);
+    };
+    return input;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
@@ -234,11 +248,7 @@ const FAQ = () => {
                             size="icon" 
                             variant="outline"
                             onClick={() => {
-                              const input = document.createElement('input');
-                              input.type = 'file';
-                              input.accept = 'image/*';
-                              input.capture = 'environment';
-                              input.onchange = (e) => handleFileChange(e as React.ChangeEvent<HTMLInputElement>);
+                              const input = createFileInput('image/*', 'environment');
                               input.click();
                             }}
                           >
@@ -249,11 +259,7 @@ const FAQ = () => {
                             size="icon" 
                             variant="outline"
                             onClick={() => {
-                              const input = document.createElement('input');
-                              input.type = 'file';
-                              input.accept = 'video/*';
-                              input.capture = 'environment';
-                              input.onchange = (e) => handleFileChange(e as React.ChangeEvent<HTMLInputElement>);
+                              const input = createFileInput('video/*', 'environment');
                               input.click();
                             }}
                           >
