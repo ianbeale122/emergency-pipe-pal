@@ -1,16 +1,16 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Shield, User, LogIn } from "lucide-react";
+import { Menu, X, Shield, LogIn } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { SignedIn, UserButton } from "@clerk/clerk-react";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 // Import our components
-import { DesktopNav } from "./navigation/DesktopNav";
-import { MobileMenu } from "./navigation/MobileMenu";
-import { BottomNav } from "./navigation/BottomNav";
-import { isClerkAvailable } from "./navigation/ClerkUtil";
+import { DesktopNav } from "@/components/navigation/DesktopNav";
+import { MobileMenu } from "@/components/navigation/MobileMenu";
+import { BottomNav } from "@/components/navigation/BottomNav";
+import { isClerkAvailable } from "@/components/navigation/ClerkUtil";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Navigation = () => {
@@ -69,10 +69,18 @@ export const Navigation = () => {
             <div className="flex items-center md:hidden">
               {/* Login icon button for mobile */}
               {!isAtPortal && (
-                <Link to="/customer-portal" className="mr-3 flex items-center text-primary">
-                  <LogIn className="h-5 w-5" />
-                  <span className="ml-1 text-sm">Login</span>
-                </Link>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link to="/customer-portal" className="mr-3">
+                        <LogIn className="h-5 w-5 text-primary" />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Login</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
               
               {clerkAvailable && (
@@ -143,6 +151,27 @@ export const Navigation = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
+
+      {/* Discreet Admin button for customer portal page */}
+      {isPortalRoute && (
+        <div className="fixed bottom-4 left-4 opacity-50 hover:opacity-100 transition-opacity">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link 
+                  to="/admin" 
+                  className="text-gray-300 hover:text-gray-500 bg-white/80 p-2 rounded-full shadow-sm border border-gray-100 flex items-center justify-center"
+                >
+                  <Shield className="h-4 w-4" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Admin Portal</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
     </>
   );
 };
