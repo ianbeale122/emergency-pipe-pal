@@ -1,6 +1,5 @@
-
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Shield, LogIn } from "lucide-react";
+import { Menu, X, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SignedIn, UserButton } from "@clerk/clerk-react";
@@ -90,11 +89,6 @@ export const Navigation = () => {
               adminLink={null}
               clerkAvailable={clerkAvailable}
               isAdminRoute={isAdminRoute}
-              loginButton={!isAtPortal ? {
-                href: "/customer-portal",
-                icon: LogIn,
-                tooltip: "Login"
-              } : null}
             />
           </div>
 
@@ -111,7 +105,7 @@ export const Navigation = () => {
         </div>
       </nav>
       
-      {/* Bottom Navigation for Mobile - without admin button */}
+      {/* Bottom Navigation for Mobile */}
       <BottomNav isAdminRoute={isAdminRoute} />
       
       {/* Add padding to the bottom of the page to account for the bottom nav */}

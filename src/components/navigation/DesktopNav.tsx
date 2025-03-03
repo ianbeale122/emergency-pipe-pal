@@ -2,9 +2,6 @@
 import { NavLink } from "./NavLink";
 import { AuthButtons } from "./AuthButtons";
 import { SignedIn } from "@clerk/clerk-react";
-import { LucideIcon } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DesktopNavProps {
   links: Array<{ href: string; label: string }>;
@@ -14,7 +11,7 @@ interface DesktopNavProps {
   isAdminRoute?: boolean;
   loginButton: {
     href: string;
-    icon: LucideIcon;
+    icon: any;
     tooltip: string;
   } | null;
 }
@@ -24,8 +21,7 @@ export const DesktopNav = ({
   protectedLinks, 
   adminLink, 
   clerkAvailable, 
-  isAdminRoute,
-  loginButton
+  isAdminRoute
 }: DesktopNavProps) => {
   return (
     <div className="hidden md:flex items-center space-x-4">
@@ -58,17 +54,6 @@ export const DesktopNav = ({
             />
           ))}
         </>
-      )}
-      
-      {/* Login button */}
-      {loginButton && (
-        <Link 
-          to={loginButton.href}
-          className="text-primary hover:text-primary/80 p-2 flex items-center justify-center gap-2"
-        >
-          <loginButton.icon className="h-5 w-5" />
-          <span>Login</span>
-        </Link>
       )}
       
       <div className="pl-4 border-l border-gray-200">
