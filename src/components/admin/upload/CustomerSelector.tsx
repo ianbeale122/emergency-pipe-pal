@@ -16,14 +16,18 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
 }) => {
   return (
     <div>
-      <Label htmlFor="customer">Customer</Label>
+      <Label htmlFor="customer" className="text-indigo-300">Customer</Label>
       <Select value={selectedCustomerId} onValueChange={onCustomerChange}>
-        <SelectTrigger id="customer">
+        <SelectTrigger id="customer" className="bg-slate-800 border-slate-700 text-white">
           <SelectValue placeholder="Select customer" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-slate-800 border border-slate-700 text-white">
           {customers.map((customer) => (
-            <SelectItem key={customer.id} value={customer.id}>
+            <SelectItem 
+              key={customer.id} 
+              value={customer.id}
+              className="text-white hover:bg-slate-700 focus:bg-slate-700"
+            >
               {customer.full_name}
             </SelectItem>
           ))}
