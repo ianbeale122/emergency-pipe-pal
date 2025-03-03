@@ -18,7 +18,7 @@ export const Navigation = () => {
   const links = [
     { href: "/", label: "Home" },
     { href: "/faq", label: "FAQ" },
-    { href: "/chat", label: "Live Chat" },
+    { href: "/chat", label: "Help" },
     { href: "/annual-service", label: "Annual Service" },
     { href: "/emergency", label: "Emergency" },
   ];

@@ -1,5 +1,5 @@
 
-import { Home, FileQuestion, MessageCircle, CalendarClock, AlertTriangle, User } from "lucide-react";
+import { Home, FileQuestion, MessageCircle, CalendarClock, AlertTriangle, User, HelpCircle } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { isClerkAvailable } from "./ClerkUtil";
@@ -13,7 +13,7 @@ export const BottomNav = () => {
   const navItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/faq", label: "FAQ", icon: FileQuestion },
-    { href: "/chat", label: "Chat", icon: MessageCircle },
+    { href: "/chat", label: "Help", icon: HelpCircle },
     { href: "/annual-service", label: "Service", icon: CalendarClock },
     { href: "/emergency", label: "Emergency", icon: AlertTriangle },
   ];
