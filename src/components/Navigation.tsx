@@ -1,16 +1,15 @@
-
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Shield, User, LogIn } from "lucide-react";
+import { Menu, X, Shield, LogIn } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { SignedIn, UserButton } from "@clerk/clerk-react";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 
 // Import our components
-import { DesktopNav } from "./navigation/DesktopNav";
-import { MobileMenu } from "./navigation/MobileMenu";
-import { BottomNav } from "./navigation/BottomNav";
-import { isClerkAvailable } from "./navigation/ClerkUtil";
+import { DesktopNav } from "@/components/navigation/DesktopNav";
+import { MobileMenu } from "@/components/navigation/MobileMenu";
+import { BottomNav } from "@/components/navigation/BottomNav";
+import { isClerkAvailable } from "@/components/navigation/ClerkUtil";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Navigation = () => {
