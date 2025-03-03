@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Mail, User, ExternalLink, Calendar, MapPin, Phone } from 'lucide-react';
+import { Search, Mail, User, ExternalLink, Calendar, MapPin, Phone, Users, Wrench } from 'lucide-react';
 
 type Customer = {
   id: string;
@@ -190,6 +190,3 @@ const CustomerList = ({ customers }: CustomerListProps) => {
 };
 
 export default CustomerList;
-
-// Import additional icons we need
-import { Users, Wrench } from 'lucide-react';
