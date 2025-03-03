@@ -23,6 +23,8 @@ export const useAdminAuth = () => {
   }, []);
 
   const handleLogin = (email: string, password: string, rememberMe: boolean) => {
+    console.log("Login attempt:", { email, password, rememberMe });
+    
     if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
       setIsAuthenticated(true);
       localStorage.setItem("adminAuth", "true");

@@ -5,6 +5,8 @@ import { Navigation } from "@/components/Navigation";
 import AdminLoginContainer from "@/components/admin/AdminLoginContainer";
 import AdminTabContent from "@/components/admin/AdminTabContent";
 import AdminLoading from "@/components/admin/AdminLoading";
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AdminPortal = () => {
   const { isAuthenticated, isLoading, handleLogin, handleLogout } = useAdminAuth();
@@ -15,6 +17,18 @@ const AdminPortal = () => {
     isLoadingStats, 
     handleUploadSuccess 
   } = useAdminData(isAuthenticated);
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Ensure we're on the /admin route when accessing the admin portal
+  useEffect(() => {
+    if (location.pathname !== '/admin' && isAuthenticated) {
+      navigate('/admin');
+    }
+  }, [location.pathname, isAuthenticated, navigate]);
+
+  console.log("Admin authentication state:", { isAuthenticated, isLoading });
 
   if (isLoading) {
     return <AdminLoading />;

@@ -3,7 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import AdminLogin from "@/components/admin/AdminLogin";
 
 interface AdminLoginContainerProps {
-  onLogin: (email: string, password: string, rememberMe: boolean) => void;
+  onLogin: (email: string, password: string, rememberMe: boolean) => boolean;
 }
 
 const AdminLoginContainer = ({ onLogin }: AdminLoginContainerProps) => {
