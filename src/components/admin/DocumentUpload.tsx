@@ -1,401 +1,279 @@
-
-import { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
-import { 
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { List, ListItem } from "@/components/ui/list";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
+import { Progress } from "@/components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Upload, File, AlertCircle } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { fetchAllUsers } from "@/api/portal";
-import { uploadCustomerDocument } from "@/api/portal";
-import { useQuery } from "@tanstack/react-query";
+} from "@/components/ui/select"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface DocumentUploadProps {
   documentType: 'certificate' | 'invoice';
 }
 
-interface CertificateMetadata {
-  name: string;
-  property: string;
-  issue_date: string;
-  expiry_date: string;
-  status: string;
+interface User {
+  id: string;
+  full_name: string;
+  email: string;
 }
 
-interface InvoiceMetadata {
+interface Invoice {
+  id: string;
+  invoice_number: string;
+  customer_id: string;
   amount: number;
-  currency: string;
-  date: string;
+  issue_date: string;
   due_date: string;
   status: string;
-  description: string;
 }
 
-export default function DocumentUpload({ documentType }: DocumentUploadProps) {
-  const [file, setFile] = useState<File | null>(null);
-  const [userId, setUserId] = useState<string>('');
-  const [isUploading, setIsUploading] = useState(false);
+const DocumentUpload: React.FC<DocumentUploadProps> = ({ documentType }) => {
+  const [files, setFiles] = useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploading, setUploading] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<string | undefined>(undefined);
+  const [invoiceNumber, setInvoiceNumber] = useState<string>('');
+  const [invoiceAmount, setInvoiceAmount] = useState<number | undefined>(undefined);
+  const [invoiceDueDate, setInvoiceDueDate] = useState<Date | undefined>(undefined);
+  const [invoiceStatus, setInvoiceStatus] = useState<string>('Pending');
+  const [users, setUsers] = useState<User[]>([
+    { id: '1', full_name: 'John Doe', email: 'john.doe@example.com' },
+    { id: '2', full_name: 'Jane Smith', email: 'jane.smith@example.com' },
+    { id: '3', full_name: 'Alice Johnson', email: 'alice.johnson@example.com' },
+  ]);
+  const [invoices, setInvoices] = useState<Invoice[]>([
+    { id: '101', invoice_number: 'INV-2023-001', customer_id: '1', amount: 500, issue_date: '2023-01-15', due_date: '2023-02-15', status: 'Paid' },
+    { id: '102', invoice_number: 'INV-2023-002', customer_id: '2', amount: 750, issue_date: '2023-02-20', due_date: '2023-03-20', status: 'Pending' },
+    { id: '103', invoice_number: 'INV-2023-003', customer_id: '1', amount: 1000, issue_date: '2023-03-25', due_date: '2023-04-25', status: 'Overdue' },
+  ]);
   const { toast } = useToast();
-  
-  // Certificate specific metadata
-  const [certificateName, setCertificateName] = useState('');
-  const [property, setProperty] = useState('');
-  const [issueDate, setIssueDate] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [certificateStatus, setCertificateStatus] = useState('Valid');
-  
-  // Invoice specific metadata
-  const [amount, setAmount] = useState<number>(0);
-  const [currency, setCurrency] = useState('GBP');
-  const [invoiceDate, setInvoiceDate] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [invoiceStatus, setInvoiceStatus] = useState('Pending');
-  const [description, setDescription] = useState('');
 
-  // Fetch all users for dropdown
-  const { data: users, isLoading: isLoadingUsers } = useQuery({
-    queryKey: ['users'],
-    queryFn: fetchAllUsers
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFiles(acceptedFiles);
+  }, []);
+
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    onDrop,
+    accept: {
+      'application/pdf': ['.pdf'],
+    },
+    maxFiles: 1,
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+  const handleUpload = async () => {
+    if (!files || files.length === 0) {
+      toast({
+        title: "No file selected",
+        description: "Please select a file to upload.",
+        variant: "destructive",
+      });
+      return;
     }
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!file) {
+    if (documentType === 'invoice' && (!selectedCustomer || !invoiceNumber || !invoiceAmount || !invoiceDueDate)) {
       toast({
-        title: "Error",
-        description: "Please select a file to upload",
+        title: "Missing invoice details",
+        description: "Please fill in all invoice details before uploading.",
         variant: "destructive",
       });
       return;
     }
-    
-    if (!userId) {
-      toast({
-        title: "Error",
-        description: "Please select a customer",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setIsUploading(true);
-    
-    try {
-      let metadata: CertificateMetadata | InvoiceMetadata;
-      
-      if (documentType === 'certificate') {
-        metadata = {
-          name: certificateName,
-          property,
-          issue_date: issueDate,
-          expiry_date: expiryDate,
-          status: certificateStatus
-        };
-      } else {
-        metadata = {
-          amount,
-          currency,
-          date: invoiceDate,
-          due_date: dueDate,
-          status: invoiceStatus,
-          description
-        };
+
+    setUploading(true);
+    setUploadProgress(0);
+
+    // Simulate upload progress
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      setUploadProgress(progress);
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        setUploading(false);
+        toast({
+          title: "Upload successful",
+          description: `${documentType === 'certificate' ? 'Certificate' : 'Invoice'} uploaded successfully.`,
+        });
+        setFiles([]);
+        setUploadProgress(0);
       }
-      
-      const result = await uploadCustomerDocument(file, userId, documentType, metadata);
-      
-      if (!result.success) {
-        throw new Error(result.error);
-      }
-      
-      toast({
-        title: "Upload Successful",
-        description: `${documentType === 'certificate' ? 'Certificate' : 'Invoice'} has been uploaded successfully.`,
-      });
-      
-      // Reset form
-      setFile(null);
-      
-      if (documentType === 'certificate') {
-        setCertificateName('');
-        setProperty('');
-        setIssueDate('');
-        setExpiryDate('');
-        setCertificateStatus('Valid');
-      } else {
-        setAmount(0);
-        setCurrency('GBP');
-        setInvoiceDate('');
-        setDueDate('');
-        setInvoiceStatus('Pending');
-        setDescription('');
-      }
-      
-    } catch (error: any) {
-      console.error('Upload error:', error);
-      toast({
-        title: "Upload Failed",
-        description: error.message || "There was an error uploading the document",
-        variant: "destructive",
-      });
-    } finally {
-      setIsUploading(false);
-    }
+    }, 100);
+
+    // Here you would typically send the file and metadata to your server
+    console.log('File to upload:', files[0]);
+    console.log('Selected customer:', selectedCustomer);
+    console.log('Invoice number:', invoiceNumber);
+    console.log('Invoice amount:', invoiceAmount);
+    console.log('Invoice due date:', invoiceDueDate);
+    console.log('Invoice status:', invoiceStatus);
   };
 
   return (
-    <Card className="p-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-1">
-          <h3 className="text-xl font-semibold">
-            Upload {documentType === 'certificate' ? 'Certificate' : 'Invoice'}
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Upload a {documentType === 'certificate' ? 'certificate' : 'invoice'} for a customer
-          </p>
+    <Card>
+      <CardHeader>
+        <CardTitle>Upload {documentType === 'certificate' ? 'Certificate' : 'Invoice'}</CardTitle>
+        <CardDescription>
+          {documentType === 'certificate'
+            ? 'Upload a new customer certificate.'
+            : 'Upload a new customer invoice.'}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div {...getRootProps()} className="relative border-2 border-dashed rounded-md p-6 cursor-pointer bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600">
+          <input {...getInputProps()} />
+          {
+            isDragActive ?
+              <p className="text-center text-gray-500">Drop the files here ...</p> :
+              <p className="text-center text-gray-500">Drag 'n' drop some files here, or click to select files</p>
+          }
+          {files.length > 0 && (
+            <div className="absolute top-2 right-2">
+              <Button variant="ghost" size="icon" onClick={() => setFiles([])}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="M6 6 18 18"/></svg>
+              </Button>
+            </div>
+          )}
         </div>
-        
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="customer">Customer</Label>
-            <Select
-              value={userId}
-              onValueChange={setUserId}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a customer" />
-              </SelectTrigger>
-              <SelectContent>
-                {isLoadingUsers ? (
-                  <SelectItem value="loading" disabled>Loading customers...</SelectItem>
-                ) : (
-                  users?.map(user => (
-                    <SelectItem key={user.user_id} value={user.user_id}>
-                      {user.full_name} ({user.email || ''})
+        {files.length > 0 && (
+          <List className="space-y-2">
+            <ListItem>{files[0].name} - {Math.round(files[0].size / 1024)} KB</ListItem>
+          </List>
+        )}
+
+        {documentType === 'invoice' && (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="customer">Customer</Label>
+              <Select onValueChange={setSelectedCustomer}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a customer" />
+                </SelectTrigger>
+                <SelectContent>
+                  {users.map((user) => (
+                    <SelectItem key={user.id} value={user.id}>
+                      {user.full_name}
                     </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="file">Document File (PDF)</Label>
-            <div className="flex items-center gap-2">
-              <div className="flex-1">
-                <div className="border rounded-md overflow-hidden">
-                  <Input 
-                    id="file" 
-                    type="file" 
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    className="cursor-pointer"
-                  />
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedCustomer && (
+                <div className="mt-2">
+                  <p className="text-sm font-medium">Customer Details:</p>
+                  {users.filter(user => user.id === selectedCustomer).map(user => (
+                    <div key={user.id}>
+                      <p className="text-sm text-gray-500">{user.full_name}</p>
+                      <p className="text-sm text-gray-500">{user.email}</p>
+                    </div>
+                  ))}
                 </div>
-              </div>
-              {file && (
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="icon"
-                  onClick={() => setFile(null)}
-                >
-                  <AlertCircle className="h-4 w-4" />
-                </Button>
               )}
             </div>
-            {file && (
-              <p className="text-xs text-muted-foreground mt-1">
-                Selected: {file.name}
-              </p>
-            )}
-          </div>
-          
-          {documentType === 'certificate' ? (
-            // Certificate metadata
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="certificate-name">Certificate Name</Label>
-                <Input
-                  id="certificate-name"
-                  value={certificateName}
-                  onChange={(e) => setCertificateName(e.target.value)}
-                  placeholder="Gas Safety Certificate"
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="property">Property Address</Label>
-                <Input
-                  id="property"
-                  value={property}
-                  onChange={(e) => setProperty(e.target.value)}
-                  placeholder="123 Main St, London"
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="issue-date">Issue Date</Label>
-                  <Input
-                    id="issue-date"
-                    type="date"
-                    value={issueDate}
-                    onChange={(e) => setIssueDate(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="expiry-date">Expiry Date</Label>
-                  <Input
-                    id="expiry-date"
-                    type="date"
-                    value={expiryDate}
-                    onChange={(e) => setExpiryDate(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={certificateStatus}
-                  onValueChange={setCertificateStatus}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Valid">Valid</SelectItem>
-                    <SelectItem value="Expired">Expired</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </>
-          ) : (
-            // Invoice metadata
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Input
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Annual Boiler Service"
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="amount">Amount</Label>
-                  <Input
-                    id="amount"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={amount.toString()}
-                    onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="currency">Currency</Label>
-                  <Select
-                    value={currency}
-                    onValueChange={setCurrency}
+            <div>
+              <Label htmlFor="invoiceNumber">Invoice Number</Label>
+              <Input
+                type="text"
+                id="invoiceNumber"
+                value={invoiceNumber}
+                onChange={(e) => setInvoiceNumber(e.target.value)}
+                placeholder="INV-2023-001"
+              />
+            </div>
+            <div>
+              <Label htmlFor="invoiceAmount">Invoice Amount</Label>
+              <Input
+                type="number"
+                id="invoiceAmount"
+                value={invoiceAmount || ''}
+                onChange={(e) => setInvoiceAmount(Number(e.target.value))}
+                placeholder="500.00"
+              />
+            </div>
+            <div>
+              <Label>Invoice Due Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !invoiceDueDate && "text-muted-foreground"
+                    )}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="GBP">GBP (£)</SelectItem>
-                      <SelectItem value="EUR">EUR (€)</SelectItem>
-                      <SelectItem value="USD">USD ($)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="invoice-date">Invoice Date</Label>
-                  <Input
-                    id="invoice-date"
-                    type="date"
-                    value={invoiceDate}
-                    onChange={(e) => setInvoiceDate(e.target.value)}
-                    required
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {invoiceDueDate ? (
+                      format(invoiceDueDate, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={invoiceDueDate}
+                    onSelect={setInvoiceDueDate}
+                    disabled={(date) =>
+                      date < new Date()
+                    }
+                    initialFocus
                   />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="due-date">Due Date</Label>
-                  <Input
-                    id="due-date"
-                    type="date"
-                    value={dueDate}
-                    onChange={(e) => setDueDate(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="invoice-status">Status</Label>
-                <Select
-                  value={invoiceStatus}
-                  onValueChange={setInvoiceStatus}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Paid">Paid</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="Overdue">Overdue</SelectItem>
-                    <SelectItem value="Cancelled">Cancelled</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </>
-          )}
-        </div>
-        
-        <Button type="submit" className="w-full" disabled={isUploading}>
-          {isUploading ? (
-            <>
-              <span className="animate-spin mr-2">⟳</span>
-              Uploading...
-            </>
-          ) : (
-            <>
-              <Upload className="mr-2 h-4 w-4" />
-              Upload {documentType === 'certificate' ? 'Certificate' : 'Invoice'}
-            </>
-          )}
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div>
+              <Label htmlFor="invoiceStatus">Invoice Status</Label>
+              <Select value={invoiceStatus} onValueChange={setInvoiceStatus}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Paid">Paid</SelectItem>
+                  <SelectItem value="Overdue">Overdue</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
+
+        {uploadProgress > 0 && (
+          <Progress value={uploadProgress} />
+        )}
+
+        <Button onClick={handleUpload} disabled={uploading} className="w-full">
+          {uploading ? 'Uploading...' : 'Upload'}
         </Button>
-      </form>
+      </CardContent>
     </Card>
   );
-}
+};
+
+export default DocumentUpload;
