@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +17,15 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Automatically fill email if coming from customer portal
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('adminEmail');
+    if (storedEmail) {
+      setEmail(storedEmail);
+      localStorage.removeItem('adminEmail'); // Clean up after using
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

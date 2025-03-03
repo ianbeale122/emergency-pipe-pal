@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 // Admin credentials - DO NOT use this approach in production!
 const ADMIN_CREDENTIALS = {
@@ -13,7 +12,6 @@ export const useAdminAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   // Check if admin is logged in via localStorage on component mount
   useEffect(() => {
@@ -29,32 +27,52 @@ export const useAdminAuth = () => {
     
     if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
       setIsAuthenticated(true);
+      
+      // Store authentication in localStorage
       localStorage.setItem("adminAuth", "true");
       
-      // Force a full page reload to navigate to admin page
-      window.location.href = '/admin';
+      // Toast notification for successful login
+      toast({
+        title: "Login successful",
+        description: "Welcome to the admin portal",
+      });
       
       // If rememberMe is false, set up automatic logout after session
       if (!rememberMe) {
         // Auto logout after 2 hours of inactivity
-        const autoLogoutTimeout = setTimeout(() => {
-          handleLogout();
-        }, 2 * 60 * 60 * 1000); // 2 hours
+        const inactivityTimeout = 2 * 60 * 60 * 1000; // 2 hours
+        const logoutTime = Date.now() + inactivityTimeout;
+        localStorage.setItem("adminLogoutTime", logoutTime.toString());
+        
+        // Check for timeout periodically
+        const checkTimeout = () => {
+          const storedLogoutTime = localStorage.getItem("adminLogoutTime");
+          if (storedLogoutTime && Date.now() > parseInt(storedLogoutTime)) {
+            handleLogout();
+          }
+        };
+        
+        // Set up check every minute
+        const timeoutInterval = setInterval(checkTimeout, 60 * 1000);
         
         // Reset timeout on user activity
         const resetTimeout = () => {
-          clearTimeout(autoLogoutTimeout);
+          const newLogoutTime = Date.now() + inactivityTimeout;
+          localStorage.setItem("adminLogoutTime", newLogoutTime.toString());
         };
         
         // Add event listeners to track user activity
         window.addEventListener('mousemove', resetTimeout);
         window.addEventListener('keydown', resetTimeout);
+        
+        // Clean up on logout
+        return () => {
+          clearInterval(timeoutInterval);
+          window.removeEventListener('mousemove', resetTimeout);
+          window.removeEventListener('keydown', resetTimeout);
+        };
       }
       
-      toast({
-        title: "Login successful",
-        description: "Welcome to the admin portal",
-      });
       return true;
     } else {
       toast({
@@ -69,12 +87,15 @@ export const useAdminAuth = () => {
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("adminAuth");
-    // Force a full page reload to the admin login page
-    window.location.href = '/admin';
+    localStorage.removeItem("adminLogoutTime");
+    
     toast({
       title: "Logged out",
       description: "You have been logged out successfully",
     });
+    
+    // Redirect to admin login page
+    window.location.href = '/admin';
   };
 
   return {

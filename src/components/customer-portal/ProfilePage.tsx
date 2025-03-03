@@ -6,6 +6,7 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileForm from "./ProfileForm";
 import { useNavigate } from "react-router-dom";
 import { Shield } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 export interface UpdatedProfileData {
   firstName: string;
@@ -27,6 +28,7 @@ interface ProfilePageProps {
 
 const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const {
     formData,
@@ -40,6 +42,17 @@ const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
   const goToAdminPortal = () => {
     // Clear any existing admin auth to force login screen
     localStorage.removeItem("adminAuth");
+    
+    // Store user info to pre-fill admin login form
+    if (user && user.email === "beale122@gmail.com") {
+      localStorage.setItem("adminEmail", user.email);
+      
+      toast({
+        title: "Redirecting to admin portal",
+        description: "Use your customer portal credentials to log in",
+      });
+    }
+    
     // Use window.location instead of navigate to ensure full page reload
     window.location.href = '/admin';
   };
