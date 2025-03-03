@@ -5,14 +5,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lock, Mail } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface AdminLoginProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (email: string, password: string, rememberMe: boolean) => void;
 }
 
 const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,7 +24,7 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
     // Simulate a bit of loading time
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    onLogin(email, password);
+    onLogin(email, password, rememberMe);
     setIsLoading(false);
   };
 
@@ -63,6 +65,20 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="rememberMe" 
+              checked={rememberMe} 
+              onCheckedChange={(checked) => setRememberMe(checked as boolean)} 
+            />
+            <Label 
+              htmlFor="rememberMe" 
+              className="text-sm font-normal cursor-pointer"
+            >
+              Remember me for 30 days
+            </Label>
           </div>
           
           <Button type="submit" className="w-full" disabled={isLoading}>
