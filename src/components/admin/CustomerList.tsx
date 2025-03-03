@@ -1,8 +1,7 @@
-
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Mail, User, ExternalLink, Calendar, MapPin, Phone, Users, Wrench } from 'lucide-react';
+import { Search, Mail, User, ExternalLink, Calendar, MapPin, Phone, Users, Wrench, UserCheck, UserMinus, UserPlus, Filter, X } from 'lucide-react';
 
 type Customer = {
   id: string;
@@ -10,8 +9,8 @@ type Customer = {
   email: string;
 };
 
-// Mock customer extended data (in a real app, this would come from the database)
-const customerExtendedData: Record<string, {
+// Enhanced mock customer data with more entries
+const mockCustomerExtendedData: Record<string, {
   phone?: string;
   address?: string;
   joinDate?: string;
@@ -52,8 +51,73 @@ const customerExtendedData: Record<string, {
     joinDate: '2023-04-12',
     status: 'active',
     lastService: '2024-02-15'
+  },
+  '6': {
+    phone: '07700 900987',
+    address: '34 Elm Court, Edinburgh',
+    joinDate: '2023-06-18',
+    status: 'active',
+    lastService: '2024-03-05'
+  },
+  '7': {
+    phone: '07700 900234',
+    address: '90 Birch Road, Bristol',
+    joinDate: '2022-03-25',
+    status: 'inactive',
+    lastService: '2023-08-12'
+  },
+  '8': {
+    phone: '07700 900567',
+    address: '56 Ash Avenue, Liverpool',
+    joinDate: '2021-12-10',
+    status: 'active',
+    lastService: '2024-01-08'
+  },
+  '9': {
+    phone: '07700 900890',
+    address: '23 Spruce Street, Newcastle',
+    joinDate: '2023-09-05',
+    status: 'active',
+    lastService: '2024-02-28'
+  },
+  '10': {
+    phone: '07700 900432',
+    address: '78 Fir Close, Belfast',
+    joinDate: '2022-08-15',
+    status: 'inactive',
+    lastService: '2023-11-22'
+  },
+  '11': {
+    phone: '07700 900765',
+    address: '45 Sycamore Lane, Leeds',
+    joinDate: '2023-02-18',
+    status: 'active',
+    lastService: '2024-03-10'
+  },
+  '12': {
+    phone: '07700 900098',
+    address: '12 Cherry Way, Sheffield',
+    joinDate: '2021-11-30',
+    status: 'active',
+    lastService: '2024-01-15'
   }
 };
+
+// Enhanced mock customer list with more entries
+const mockCustomers: Customer[] = [
+  { id: '1', full_name: 'John Smith', email: 'john.smith@example.com' },
+  { id: '2', full_name: 'Sarah Johnson', email: 'sarah.j@example.com' },
+  { id: '3', full_name: 'David Williams', email: 'david.w@example.com' },
+  { id: '4', full_name: 'Emma Thompson', email: 'emma.t@example.com' },
+  { id: '5', full_name: 'Michael Davies', email: 'michael.d@example.com' },
+  { id: '6', full_name: 'Rebecca Wilson', email: 'rebecca.w@example.com' },
+  { id: '7', full_name: 'Thomas Brown', email: 'thomas.b@example.com' },
+  { id: '8', full_name: 'Jessica Taylor', email: 'jessica.t@example.com' },
+  { id: '9', full_name: 'Daniel Evans', email: 'daniel.e@example.com' },
+  { id: '10', full_name: 'Olivia Roberts', email: 'olivia.r@example.com' },
+  { id: '11', full_name: 'James Martin', email: 'james.m@example.com' },
+  { id: '12', full_name: 'Sophie White', email: 'sophie.w@example.com' }
+];
 
 interface CustomerListProps {
   customers: Customer[];
@@ -62,14 +126,33 @@ interface CustomerListProps {
 const CustomerList = ({ customers }: CustomerListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
 
-  const filteredCustomers = customers.filter(customer => 
-    customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Use the provided customers list if available, otherwise fall back to mock data
+  const customerData = customers.length > 0 ? customers : mockCustomers;
+
+  // Memoized filtered customers based on search term and filter status
+  const filteredCustomers = useMemo(() => {
+    return customerData.filter(customer => {
+      const matchesSearch = 
+        customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        customer.email.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      if (filterStatus === 'all') return matchesSearch;
+      
+      const extendedData = mockCustomerExtendedData[customer.id];
+      const matchesStatus = extendedData?.status === filterStatus;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [customerData, searchTerm, filterStatus]);
 
   const toggleExpand = (customerId: string) => {
     setExpandedCustomer(expandedCustomer === customerId ? null : customerId);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
   };
 
   return (
@@ -81,21 +164,68 @@ const CustomerList = ({ customers }: CustomerListProps) => {
         </h2>
       </div>
       
-      <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-indigo-400" />
-        <Input
-          type="text"
-          placeholder="Search customers..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 border-slate-700 bg-slate-800 text-white placeholder:text-slate-400 focus:border-indigo-500"
-        />
+      <div className="flex flex-col md:flex-row gap-4 mb-4">
+        <div className="relative flex-grow">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-indigo-400" />
+          <Input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 border-slate-700 bg-slate-800 text-white placeholder:text-slate-400 focus:border-indigo-500 pr-10"
+          />
+          {searchTerm && (
+            <button 
+              onClick={handleClearSearch}
+              className="absolute right-3 top-3 text-slate-400 hover:text-white"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4 text-indigo-400" />
+          <div className="flex rounded-md overflow-hidden">
+            <Button
+              variant="outline"
+              size="sm"
+              className={`${filterStatus === 'all' ? 'bg-indigo-700 text-white' : 'bg-slate-800 text-slate-300'} border-slate-700 rounded-none rounded-l-md`}
+              onClick={() => setFilterStatus('all')}
+            >
+              All
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className={`${filterStatus === 'active' ? 'bg-indigo-700 text-white' : 'bg-slate-800 text-slate-300'} border-slate-700 border-l-0 rounded-none`}
+              onClick={() => setFilterStatus('active')}
+            >
+              <UserCheck className="mr-1 h-4 w-4" />
+              Active
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className={`${filterStatus === 'inactive' ? 'bg-indigo-700 text-white' : 'bg-slate-800 text-slate-300'} border-slate-700 border-l-0 rounded-none rounded-r-md`}
+              onClick={() => setFilterStatus('inactive')}
+            >
+              <UserMinus className="mr-1 h-4 w-4" />
+              Inactive
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-4 text-sm text-indigo-300">
+        <p>Showing {filteredCustomers.length} of {customerData.length} customers</p>
       </div>
 
       {filteredCustomers.length > 0 ? (
         <div className="grid gap-4">
           {filteredCustomers.map(customer => {
-            const extendedData = customerExtendedData[customer.id] || {};
+            const extendedData = mockCustomerExtendedData[customer.id] || {};
             const isExpanded = expandedCustomer === customer.id;
             
             return (
@@ -182,7 +312,7 @@ const CustomerList = ({ customers }: CustomerListProps) => {
         <div className="text-center py-10">
           <User className="h-12 w-12 mx-auto text-indigo-400 opacity-30 mb-4" />
           <h3 className="text-lg font-medium text-white">No customers found</h3>
-          <p className="text-indigo-300">Try adjusting your search term</p>
+          <p className="text-indigo-300">Try adjusting your search term or filters</p>
         </div>
       )}
     </div>
