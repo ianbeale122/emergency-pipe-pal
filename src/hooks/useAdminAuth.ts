@@ -31,8 +31,8 @@ export const useAdminAuth = () => {
       setIsAuthenticated(true);
       localStorage.setItem("adminAuth", "true");
       
-      // Explicitly navigate to admin page after successful login
-      navigate('/admin');
+      // Force a full page reload to navigate to admin page
+      window.location.href = '/admin';
       
       // If rememberMe is false, set up automatic logout after session
       if (!rememberMe) {
@@ -69,7 +69,8 @@ export const useAdminAuth = () => {
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("adminAuth");
-    navigate('/admin'); // Navigate back to admin login
+    // Force a full page reload to the admin login page
+    window.location.href = '/admin';
     toast({
       title: "Logged out",
       description: "You have been logged out successfully",

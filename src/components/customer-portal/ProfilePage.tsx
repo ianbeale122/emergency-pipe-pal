@@ -40,7 +40,8 @@ const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
   const goToAdminPortal = () => {
     // Clear any existing admin auth to force login screen
     localStorage.removeItem("adminAuth");
-    navigate('/admin');
+    // Use window.location instead of navigate to ensure full page reload
+    window.location.href = '/admin';
   };
 
   return (

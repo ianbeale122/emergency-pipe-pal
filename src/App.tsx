@@ -62,8 +62,8 @@ const App = () => {
               } 
             />
             
-            {/* Admin Portal Route */}
-            <Route path="/admin" element={<AdminPortal />} />
+            {/* Admin Portal Route - Separate from customer portal */}
+            <Route path="/admin/*" element={<AdminPortal />} />
             
             {/* Auth Routes */}
             <Route path="/sign-in" element={<SignIn />} />
