@@ -1,3 +1,4 @@
+
 import { supabase } from "@/lib/supabase";
 
 // Types
@@ -110,11 +111,12 @@ export const fetchCertificates = async (userId: string) => {
       return mockCertificates;
     }
     
-    const { data, error } = await supabase
+    const response = await supabase
       .from('certificates')
       .select('*')
       .eq('user_id', userId);
       
+    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockCertificates;
   } catch (error) {
@@ -157,11 +159,12 @@ export const fetchInvoices = async (userId: string) => {
       return mockInvoices;
     }
     
-    const { data, error } = await supabase
+    const response = await supabase
       .from('invoices')
       .select('*')
       .eq('user_id', userId);
       
+    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockInvoices;
   } catch (error) {
@@ -214,10 +217,11 @@ export const fetchAllInvoices = async (): Promise<Invoice[]> => {
       return mockInvoices;
     }
     
-    const { data, error } = await supabase
+    const response = await supabase
       .from('invoices')
       .select('*');
       
+    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockInvoices;
   } catch (error) {
@@ -256,10 +260,11 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
       return mockUsers;
     }
     
-    const { data, error } = await supabase
+    const response = await supabase
       .from('profiles')
       .select('*');
       
+    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockUsers;
   } catch (error) {

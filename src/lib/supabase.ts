@@ -17,10 +17,16 @@ export const supabase = supabaseUrl
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
       },
       from: () => ({
-        select: () => ({ eq: () => ({ data: [], error: null }) }),
-        insert: () => ({ data: null, error: null }),
-        update: () => ({ eq: () => ({ data: null, error: null }) }),
-        delete: () => ({ eq: () => ({ data: null, error: null }) }),
+        select: () => ({ 
+          eq: () => Promise.resolve({ data: [], error: null }) 
+        }),
+        insert: () => Promise.resolve({ data: null, error: null }),
+        update: () => ({ 
+          eq: () => Promise.resolve({ data: null, error: null }) 
+        }),
+        delete: () => ({ 
+          eq: () => Promise.resolve({ data: null, error: null }) 
+        }),
       }),
       storage: {
         from: () => ({
