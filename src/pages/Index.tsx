@@ -146,7 +146,12 @@ const Index = () => {
       <Hero />
       <Services />
       <BookingForm />
-      <EmergencyButton />
+      
+      {/* Adjust emergency button to be above the bottom navigation on mobile */}
+      <EmergencyButton className="mb-16 sm:mb-6" />
+      
+      {/* Add padding at the bottom for the bottom navigation on mobile */}
+      <div className="h-16 md:h-0"></div>
     </div>
   );
 };

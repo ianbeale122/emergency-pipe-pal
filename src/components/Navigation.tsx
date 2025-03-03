@@ -1,13 +1,14 @@
 
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { SignedIn, UserButton } from "@clerk/clerk-react";
 
-// Import our new component files
+// Import our components
 import { DesktopNav } from "./navigation/DesktopNav";
 import { MobileMenu } from "./navigation/MobileMenu";
+import { BottomNav } from "./navigation/BottomNav";
 import { isClerkAvailable } from "./navigation/ClerkUtil";
 
 export const Navigation = () => {
@@ -28,50 +29,59 @@ export const Navigation = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="container px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/lovable-uploads/6c4f1fb6-e6ec-4ae1-9b8e-c18cce73a22d.png" 
-              alt="GPS Plumbing Logo" 
-              className="h-10 w-auto"
+    <>
+      <nav className="bg-white shadow-sm">
+        <div className="container px-4">
+          <div className="flex items-center justify-between h-16">
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/lovable-uploads/6c4f1fb6-e6ec-4ae1-9b8e-c18cce73a22d.png" 
+                alt="GPS Plumbing Logo" 
+                className="h-10 w-auto"
+              />
+            </Link>
+            
+            {/* Desktop Navigation */}
+            <DesktopNav 
+              links={links} 
+              protectedLinks={protectedLinks}
+              clerkAvailable={clerkAvailable}
             />
-          </Link>
-          
-          {/* Desktop Navigation */}
-          <DesktopNav 
-            links={links} 
+
+            {/* Mobile Menu Button - only show on medium and below screens when bottom nav isn't visible */}
+            <div className="flex items-center md:hidden">
+              {clerkAvailable && (
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="sm:hidden" // Only show on very small screens
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          <MobileMenu
+            isOpen={isMenuOpen}
+            links={links}
             protectedLinks={protectedLinks}
             clerkAvailable={clerkAvailable}
+            onLinkClick={() => setIsMenuOpen(false)}
           />
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden">
-            {clerkAvailable && (
-              <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-              </SignedIn>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
         </div>
-
-        {/* Mobile Navigation */}
-        <MobileMenu
-          isOpen={isMenuOpen}
-          links={links}
-          protectedLinks={protectedLinks}
-          clerkAvailable={clerkAvailable}
-          onLinkClick={() => setIsMenuOpen(false)}
-        />
-      </div>
-    </nav>
+      </nav>
+      
+      {/* Bottom Navigation for Mobile */}
+      <BottomNav />
+      
+      {/* Add padding to the bottom of the page to account for the bottom nav */}
+      <div className="pb-16 md:pb-0"></div>
+    </>
   );
 };
