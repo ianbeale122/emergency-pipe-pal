@@ -15,6 +15,7 @@ import CustomerPortal from "./pages/CustomerPortal";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Admin from "./pages/Admin";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/chat" element={<LiveChat />} />
             <Route path="/annual-service" element={<AnnualService />} />
             <Route path="/emergency" element={<Emergency />} />
+            <Route path="/login" element={<Login />} />
             
             {/* Protected Customer Portal Route - conditionally render based on Clerk availability */}
             <Route 
