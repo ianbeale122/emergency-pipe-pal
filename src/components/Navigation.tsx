@@ -31,17 +31,6 @@ export const Navigation = () => {
   const protectedLinks = [
     { href: "/customer-portal", label: "Customer Portal" },
   ];
-  
-  // Admin link - we'll still define it for the bottom nav
-  const adminLink = { 
-    href: "/admin", 
-    label: (
-      <span className="flex items-center gap-1">
-        <Shield className="h-3.5 w-3.5 text-indigo-500" />
-        Admin
-      </span>
-    ) 
-  };
 
   useEffect(() => {
     // Add a class to the body when in admin routes
@@ -74,7 +63,33 @@ export const Navigation = () => {
               )}
             </Link>
             
-            {/* Desktop Navigation - admin link removed */}
+            {/* Admin Button for Mobile - Positioned at the top */}
+            <div className="flex items-center md:hidden">
+              <Link 
+                to="/admin" 
+                className="mr-3 bg-white text-indigo-600 border border-indigo-200 px-3 py-1.5 rounded-md shadow-sm hover:bg-indigo-50 transition-colors flex items-center"
+              >
+                <Shield className="h-3.5 w-3.5 mr-1" />
+                Admin
+              </Link>
+              
+              {clerkAvailable && (
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+              )}
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="sm:hidden ml-2"
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+            </div>
+            
+            {/* Desktop Navigation */}
             <DesktopNav 
               links={links} 
               protectedLinks={protectedLinks}
@@ -82,26 +97,9 @@ export const Navigation = () => {
               clerkAvailable={clerkAvailable}
               isAdminRoute={isAdminRoute}
             />
-
-            {/* Mobile Menu Button */}
-            <div className="flex items-center md:hidden">
-              {clerkAvailable && (
-                <SignedIn>
-                  <UserButton afterSignOutUrl="/" />
-                </SignedIn>
-              )}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="sm:hidden"
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
-            </div>
           </div>
 
-          {/* Mobile Navigation - admin link removed */}
+          {/* Mobile Navigation */}
           <MobileMenu
             isOpen={isMenuOpen}
             links={links}
@@ -114,13 +112,13 @@ export const Navigation = () => {
         </div>
       </nav>
       
-      {/* Bottom Navigation for Mobile */}
+      {/* Bottom Navigation for Mobile - without admin button */}
       <BottomNav isAdminRoute={isAdminRoute} />
       
       {/* Add padding to the bottom of the page to account for the bottom nav */}
       <div className="pb-16 md:pb-0"></div>
       
-      {/* Add a discreet admin button at the bottom of desktop view */}
+      {/* Admin button for desktop view */}
       <div className="fixed bottom-4 right-4 hidden md:block">
         <TooltipProvider>
           <Tooltip>
