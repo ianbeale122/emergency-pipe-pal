@@ -62,21 +62,13 @@ export const DesktopNav = ({
       
       {/* Login button */}
       {loginButton && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link 
-                to={loginButton.href}
-                className="text-primary hover:text-primary/80 p-2 flex items-center justify-center"
-              >
-                <loginButton.icon className="h-5 w-5" />
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{loginButton.tooltip}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Link 
+          to={loginButton.href}
+          className="text-primary hover:text-primary/80 p-2 flex items-center justify-center gap-2"
+        >
+          <loginButton.icon className="h-5 w-5" />
+          <span>Login</span>
+        </Link>
       )}
       
       <div className="pl-4 border-l border-gray-200">
