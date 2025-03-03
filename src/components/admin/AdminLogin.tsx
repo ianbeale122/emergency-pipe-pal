@@ -48,7 +48,7 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@example.com"
+              placeholder="beale122@gmail.com"
               required
             />
           </div>
@@ -87,7 +87,7 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         </form>
       </CardContent>
       <CardFooter className="flex justify-center text-sm text-muted-foreground">
-        <p>For demo: admin@example.com / admin123</p>
+        <p>For demo: beale122@gmail.com / 1234</p>
       </CardFooter>
     </Card>
   );

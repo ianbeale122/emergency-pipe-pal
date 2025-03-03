@@ -1,18 +1,12 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import DocumentUploadSection from "./DocumentUploadSection";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { useProfileForm } from "./useProfileForm";
 import ProfileHeader from "./ProfileHeader";
 import ProfileForm from "./ProfileForm";
-import { useProfileForm } from "./useProfileForm";
-
-interface ProfilePageProps {
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  } | null;
-  onProfileUpdate: (updatedProfile: UpdatedProfileData) => void;
-}
+import { useNavigate } from "react-router-dom";
+import { Shield } from "lucide-react";
 
 export interface UpdatedProfileData {
   firstName: string;
@@ -23,30 +17,44 @@ export interface UpdatedProfileData {
   propertyDetails: string;
 }
 
+interface ProfilePageProps {
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  } | null;
+  onProfileUpdate: (updatedProfile: UpdatedProfileData) => void;
+}
+
 const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
-  const { 
-    formData, 
-    isEditing, 
-    setIsEditing, 
-    handleInputChange, 
-    handleSubmit, 
-    handleCancel 
+  const navigate = useNavigate();
+  
+  const {
+    formData,
+    isEditing,
+    setIsEditing,
+    handleInputChange,
+    handleSubmit,
+    handleCancel
   } = useProfileForm({ user, onProfileUpdate });
+
+  const goToAdminPortal = () => {
+    navigate('/admin');
+  };
 
   return (
     <div className="space-y-6">
       <ProfileHeader 
-        isEditing={isEditing} 
-        onEditClick={() => setIsEditing(true)} 
+        firstName={user?.firstName || ""} 
+        lastName={user?.lastName || ""} 
+        email={user?.email || ""}
       />
-
+      
       <Card>
         <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
+          <CardTitle>Profile Information</CardTitle>
           <CardDescription>
-            {isEditing 
-              ? "Make changes to your profile information below" 
-              : "Your account details and preferences"}
+            Update your profile information and manage your account settings
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -56,13 +64,28 @@ const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
             onInputChange={handleInputChange}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
-            user={user}
+            onEdit={() => setIsEditing(true)}
           />
         </CardContent>
       </Card>
       
-      {/* Add Document Upload Section */}
-      <DocumentUploadSection customerId={user?.email || 'guest'} />
+      <Card>
+        <CardHeader>
+          <CardTitle>Admin Access</CardTitle>
+          <CardDescription>
+            Access the admin portal to manage customers and documents
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button 
+            onClick={goToAdminPortal}
+            className="flex items-center gap-2"
+          >
+            <Shield className="h-4 w-4" />
+            Access Admin Portal
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };

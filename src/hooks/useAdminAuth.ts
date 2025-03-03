@@ -2,10 +2,10 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 
-// For demo purposes - this would come from a database in a real app
+// Updated admin credentials
 const ADMIN_CREDENTIALS = {
-  email: "admin@example.com",
-  password: "admin123"
+  email: "beale122@gmail.com",
+  password: "1234"
 };
 
 export const useAdminAuth = () => {

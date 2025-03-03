@@ -1,5 +1,5 @@
 
-import { Home, FileQuestion, HelpCircle, CalendarClock, AlertTriangle, User, Shield } from "lucide-react";
+import { Home, FileQuestion, HelpCircle, CalendarClock, AlertTriangle, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { isClerkAvailable } from "./ClerkUtil";
@@ -16,7 +16,6 @@ export const BottomNav = () => {
     { href: "/chat", label: "Help", icon: HelpCircle },
     { href: "/annual-service", label: "Service", icon: CalendarClock },
     { href: "/emergency", label: "Emergency", icon: AlertTriangle },
-    { href: "/admin", label: "Admin", icon: Shield },
   ];
 
   // Protected items

@@ -21,7 +21,6 @@ export const Navigation = () => {
     { href: "/chat", label: "Help" },
     { href: "/annual-service", label: "Annual Service" },
     { href: "/emergency", label: "Emergency" },
-    { href: "/admin", label: "Admin Portal" },
   ];
 
   // Protected link that only shows when signed in or when Clerk is not available
