@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "./NavLink";
 import { AuthButtons } from "./AuthButtons";
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/clerk-react";
+import { Shield, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -27,6 +29,28 @@ export const MobileMenu = ({
 
   return (
     <div className="md:hidden py-2">
+      {/* Portal links at the top of mobile menu */}
+      <div className="flex flex-col gap-2 px-3 mb-3">
+        <Link
+          to="/customer-portal"
+          className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 bg-blue-50 text-blue-700 hover:bg-blue-100"
+          onClick={onLinkClick}
+        >
+          <Users className="h-4 w-4" />
+          Customer Portal
+        </Link>
+        
+        <Link
+          to="/admin"
+          className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+          onClick={onLinkClick}
+        >
+          <Shield className="h-4 w-4" />
+          Admin Portal
+        </Link>
+      </div>
+      
+      {/* Regular navigation links */}
       {links.map((link) => (
         <NavLink
           key={link.href}
