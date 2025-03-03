@@ -5,10 +5,12 @@ import { Hero } from "@/components/Hero";
 import { Navigation } from "@/components/Navigation";
 import { Services } from "@/components/Services";
 import { WifiHigh, Droplet, Wrench, ShowerHead } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const Index = () => {
   const [activeEffects, setActiveEffects] = useState<Record<string, boolean>>({});
+  const [logoAnimationComplete, setLogoAnimationComplete] = useState(false);
 
   const triggerEffect = (id: string) => {
     setActiveEffects(prev => ({ ...prev, [id]: true }));
@@ -16,6 +18,50 @@ const Index = () => {
       setActiveEffects(prev => ({ ...prev, [id]: false }));
     }, 1000);
   };
+
+  useEffect(() => {
+    // Auto-complete the logo animation after 2.5 seconds
+    const timer = setTimeout(() => {
+      setLogoAnimationComplete(true);
+    }, 2500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!logoAnimationComplete) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100">
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
+          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+          transition={{ 
+            duration: 1.5,
+            type: "spring",
+            stiffness: 100
+          }}
+          className="flex flex-col items-center"
+        >
+          <motion.img 
+            src="/lovable-uploads/6c4f1fb6-e6ec-4ae1-9b8e-c18cce73a22d.png"
+            alt="GPS Plumbing Logo"
+            className="h-40 w-auto"
+            animate={{ y: [0, -15, 0] }}
+            transition={{ 
+              repeat: 1, 
+              duration: 1,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 2, delay: 0.5 }}
+            className="h-1 bg-primary mt-4 rounded-full"
+          />
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
