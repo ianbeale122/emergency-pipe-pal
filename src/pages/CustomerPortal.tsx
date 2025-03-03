@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 // Import our refactored components
 import AuthForms from "@/components/customer-portal/AuthForms";
 import PortalContent from "@/components/customer-portal/PortalContent";
+import { UpdatedProfileData } from "@/components/customer-portal/ProfilePage";
 
 // Import mock data
 import { 
@@ -55,6 +56,22 @@ const CustomerPortal = () => {
     });
   };
 
+  const handleProfileUpdate = (updatedProfile: UpdatedProfileData) => {
+    setUserInfo({
+      firstName: updatedProfile.firstName,
+      lastName: updatedProfile.lastName,
+      email: updatedProfile.email
+    });
+    
+    // In a real application, this would also make an API call to update the user data
+    
+    toast({
+      title: "Profile Updated",
+      description: "Your profile information has been updated successfully.",
+      duration: 3000,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navigation />
@@ -68,6 +85,7 @@ const CustomerPortal = () => {
             faqVideos={mockFaqVideos}
             stats={mockStats}
             onLogout={handleLogout}
+            onProfileUpdate={handleProfileUpdate}
           />
         ) : (
           <div className="py-8">

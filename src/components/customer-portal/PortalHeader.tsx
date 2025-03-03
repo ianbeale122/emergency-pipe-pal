@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Home, FileCheck, Receipt, HelpCircle, Menu } from "lucide-react";
+import { Home, FileCheck, Receipt, HelpCircle, Menu, User } from "lucide-react";
 import { useState } from "react";
 
 interface PortalHeaderProps {
@@ -81,6 +81,17 @@ const PortalHeader = ({ userName, onLogout, activeTab, onTabChange }: PortalHead
                 >
                   <HelpCircle className="h-5 w-5 mr-2" />
                   Video Tutorials
+                </Button>
+                <Button
+                  variant={activeTab === "profile" ? "default" : "ghost"}
+                  className="justify-start"
+                  onClick={() => {
+                    onTabChange("profile");
+                    setMenuOpen(false);
+                  }}
+                >
+                  <User className="h-5 w-5 mr-2" />
+                  Profile
                 </Button>
               </div>
             </SheetContent>

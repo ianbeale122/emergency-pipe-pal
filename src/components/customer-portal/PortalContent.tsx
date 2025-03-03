@@ -11,6 +11,8 @@ import CertificatesTab from "@/components/customer-portal/CertificatesTab";
 import InvoicesTab from "@/components/customer-portal/InvoicesTab";
 import FaqVideosTab from "@/components/customer-portal/FaqVideosTab";
 import PortalHeader from "@/components/customer-portal/PortalHeader";
+import ProfilePage from "@/components/customer-portal/ProfilePage";
+import { UpdatedProfileData } from "@/components/customer-portal/ProfilePage";
 
 // Import types
 import { Certificate } from "@/components/customer-portal/CertificateItem";
@@ -33,6 +35,7 @@ interface PortalContentProps {
     color: string;
   }>;
   onLogout: () => void;
+  onProfileUpdate?: (updatedProfile: UpdatedProfileData) => void;
 }
 
 const PortalContent = ({ 
@@ -41,11 +44,13 @@ const PortalContent = ({
   invoices, 
   faqVideos, 
   stats, 
-  onLogout 
+  onLogout,
+  onProfileUpdate 
 }: PortalContentProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("dashboard");
   const { toast } = useToast();
+  const [updatedUser, setUpdatedUser] = useState(user);
 
   const filteredCertificates = certificates.filter(cert => 
     cert.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -79,21 +84,37 @@ const PortalContent = ({
     });
   };
 
+  const handleProfileUpdate = (updatedProfile: UpdatedProfileData) => {
+    // Update the local user state
+    setUpdatedUser({
+      firstName: updatedProfile.firstName,
+      lastName: updatedProfile.lastName,
+      email: updatedProfile.email
+    });
+    
+    // Pass the updated profile to the parent component if the callback exists
+    if (onProfileUpdate) {
+      onProfileUpdate(updatedProfile);
+    }
+  };
+
   return (
     <>
       <PortalHeader 
-        userName={user?.firstName || null}
+        userName={updatedUser?.firstName || null}
         onLogout={onLogout}
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />
       
-      <div className="mb-6">
-        <SearchBar 
-          searchTerm={searchTerm} 
-          onSearchChange={setSearchTerm} 
-        />
-      </div>
+      {activeTab !== "profile" && (
+        <div className="mb-6">
+          <SearchBar 
+            searchTerm={searchTerm} 
+            onSearchChange={setSearchTerm} 
+          />
+        </div>
+      )}
       
       <PortalTabs 
         activeTab={activeTab} 
@@ -131,6 +152,14 @@ const PortalContent = ({
           <FaqVideosTab 
             videos={filteredFaqVideos}
             onPlay={playVideo}
+          />
+        </TabsContent>
+        
+        {/* Profile Tab */}
+        <TabsContent value="profile" className="animate-fade-in">
+          <ProfilePage
+            user={updatedUser}
+            onProfileUpdate={handleProfileUpdate}
           />
         </TabsContent>
       </PortalTabs>

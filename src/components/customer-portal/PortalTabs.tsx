@@ -1,6 +1,6 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileCheck, HelpCircle, Home, Receipt } from "lucide-react";
+import { FileCheck, HelpCircle, Home, Receipt, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 type PortalTabsProps = {
@@ -62,6 +62,13 @@ const PortalTabs = ({ activeTab, onTabChange, children }: PortalTabsProps) => {
           >
             <HelpCircle className="h-4 w-4" />
             <span className="hidden xs:inline">Video Tutorials</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="profile" 
+            className="flex items-center gap-2 min-w-max py-2 px-4"
+          >
+            <User className="h-4 w-4" />
+            <span className="hidden xs:inline">Profile</span>
           </TabsTrigger>
         </TabsList>
         
