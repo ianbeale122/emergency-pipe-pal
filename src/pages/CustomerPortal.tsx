@@ -5,7 +5,7 @@ import { TabsContent } from "@/components/ui/tabs";
 
 // Import custom hook and components
 import useCustomerPortal from "@/hooks/useCustomerPortal";
-import AuthForms from "@/components/customer-portal/AuthForms";
+import PortalLogin from "@/components/customer-portal/PortalLogin";
 import PortalHeader from "@/components/customer-portal/PortalHeader";
 import SearchBar from "@/components/customer-portal/SearchBar";
 import PortalTabs from "@/components/customer-portal/PortalTabs";
@@ -145,7 +145,7 @@ const CustomerPortal = () => {
         ) : (
           <div className="py-8">
             <h1 className="text-3xl font-bold text-center mb-8">Customer Portal</h1>
-            <AuthForms />
+            <PortalLogin onSuccess={() => window.location.reload()} />
           </div>
         )}
       </div>

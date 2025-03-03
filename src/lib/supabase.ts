@@ -17,9 +17,9 @@ export const supabase = supabaseUrl
       },
       from: () => ({
         select: () => ({
-          eq: (column: string, value: string) => Promise.resolve({ data: [], error: null }),
+          eq: () => Promise.resolve({ data: [], error: null }),
           order: () => ({
-            eq: (column: string, value: string) => Promise.resolve({ data: [], error: null }),
+            eq: () => Promise.resolve({ data: [], error: null }),
           }),
         }),
         insert: () => Promise.resolve({ data: null, error: null }),

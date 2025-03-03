@@ -43,26 +43,7 @@ const App = () => {
             <Route path="/annual-service" element={<AnnualService />} />
             <Route path="/emergency" element={<Emergency />} />
             <Route path="/login" element={<Login />} />
-            
-            {/* Protected Customer Portal Route - conditionally render based on Clerk availability */}
-            <Route 
-              path="/customer-portal" 
-              element={
-                clerkAvailable ? (
-                  <>
-                    <SignedIn>
-                      <CustomerPortal />
-                    </SignedIn>
-                    <SignedOut>
-                      <Navigate to="/" replace />
-                    </SignedOut>
-                  </>
-                ) : (
-                  // If Clerk is not available, just show the portal without auth
-                  <CustomerPortal />
-                )
-              } 
-            />
+            <Route path="/customer-portal" element={<CustomerPortal />} />
             
             {/* Admin Route */}
             <Route path="/admin" element={<Admin />} />
