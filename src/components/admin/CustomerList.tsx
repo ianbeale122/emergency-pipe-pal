@@ -12,9 +12,10 @@ import { StatusFilterType } from '@/components/admin/customers/types';
 
 interface CustomerListProps {
   customers: Customer[];
+  isLoading?: boolean;
 }
 
-const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
+const CustomerList: React.FC<CustomerListProps> = ({ customers, isLoading = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilterType>('all');
   const [sortBy, setSortBy] = useState<string>('name');
@@ -48,41 +49,75 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
     }
   }, [sortBy]);
 
-  // Memoized filtered customers to prevent unnecessary re-renders
-  const filteredCustomers = useMemo(() => customers
-    .filter(customer => {
-      // Filter by search term
-      const searchMatch = 
-        customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        customer.email.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // Filter by status using the mock data
-      const customerStatus = mockCustomerExtendedData[customer.id]?.status;
-      const statusMatch = statusFilter === 'all' || customerStatus === statusFilter;
-      
-      return searchMatch && statusMatch;
-    })
-    .sort((a, b) => {
-      const direction = sortDirection === 'asc' ? 1 : -1;
-      
-      switch(sortBy) {
-        case 'name':
-          return a.full_name.localeCompare(b.full_name) * direction;
-        case 'email':
-          return a.email.localeCompare(b.email) * direction;
-        case 'date':
-          // Use joined date from mock data
-          const dateA = mockCustomerExtendedData[a.id]?.joinDate || '';
-          const dateB = mockCustomerExtendedData[b.id]?.joinDate || '';
-          return (new Date(dateA).getTime() - new Date(dateB).getTime()) * direction;
-        default:
-          return 0;
-      }
-    }), [customers, searchTerm, statusFilter, sortBy, sortDirection]);
-
   const handleSearchChange = useCallback((term: string) => {
     setSearchTerm(term);
   }, []);
+
+  // Memoized filtered customers to prevent unnecessary re-renders
+  const filteredCustomers = useMemo(() => {
+    if (isLoading) return [];
+    
+    return customers
+      .filter(customer => {
+        // Filter by search term
+        const searchMatch = 
+          customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          customer.email.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        // Filter by status using the mock data
+        const customerStatus = mockCustomerExtendedData[customer.id]?.status;
+        const statusMatch = statusFilter === 'all' || customerStatus === statusFilter;
+        
+        return searchMatch && statusMatch;
+      })
+      .sort((a, b) => {
+        const direction = sortDirection === 'asc' ? 1 : -1;
+        
+        switch(sortBy) {
+          case 'name':
+            return a.full_name.localeCompare(b.full_name) * direction;
+          case 'email':
+            return a.email.localeCompare(b.email) * direction;
+          case 'date':
+            // Use joined date from mock data
+            const dateA = mockCustomerExtendedData[a.id]?.joinDate || '';
+            const dateB = mockCustomerExtendedData[b.id]?.joinDate || '';
+            return (new Date(dateA).getTime() - new Date(dateB).getTime()) * direction;
+          default:
+            return 0;
+        }
+      });
+  }, [customers, searchTerm, statusFilter, sortBy, sortDirection, isLoading]);
+
+  // Show a loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 opacity-50 pointer-events-none">
+          <div className="relative flex-grow h-10 bg-slate-800 rounded-md animate-pulse"></div>
+          <div className="flex gap-2">
+            <div className="h-10 w-28 bg-slate-800 rounded-md animate-pulse"></div>
+            <div className="h-10 w-28 bg-slate-800 rounded-md animate-pulse"></div>
+            <div className="h-10 w-28 bg-slate-800 rounded-md animate-pulse"></div>
+          </div>
+        </div>
+        
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3, 4, 5, 6].map((item) => (
+            <div 
+              key={item} 
+              className="bg-slate-800/50 rounded-lg p-6 h-48 animate-pulse shadow-md border border-slate-700/30"
+            >
+              <div className="w-3/4 h-5 bg-slate-700 rounded mb-4"></div>
+              <div className="w-1/2 h-4 bg-slate-700 rounded mb-2"></div>
+              <div className="w-2/3 h-4 bg-slate-700 rounded mb-4"></div>
+              <div className="w-1/3 h-6 bg-slate-700 rounded-md mt-auto"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -128,7 +163,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
       {filteredCustomers.length === 0 ? (
         <EmptyCustomerState searchTerm={searchTerm} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 transition-all">
           {filteredCustomers.map(customer => (
             <CustomerCard 
               key={customer.id} 
@@ -142,5 +177,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
     </div>
   );
 };
+
+CustomerList.displayName = 'CustomerList';
 
 export default React.memo(CustomerList);

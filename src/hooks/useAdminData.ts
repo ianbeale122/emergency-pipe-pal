@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/supabase';
 
@@ -41,8 +41,8 @@ const mockCustomers: Customer[] = [
 export const useAdminData = (isAuthenticated: boolean) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [documents, setDocuments] = useState<number>(0);
-  const [isLoadingCustomers, setIsLoadingCustomers] = useState(false);
-  const [isLoadingStats, setIsLoadingStats] = useState(false);
+  const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
   const { toast } = useToast();
 
   // Fetch customers and stats when authenticated
@@ -68,6 +68,8 @@ export const useAdminData = (isAuthenticated: boolean) => {
       // Use mock data if no customers are found
       if (!data || data.length === 0) {
         console.log('No customers found in database, using mock data');
+        // Short delay to prevent immediate flicker
+        await new Promise(resolve => setTimeout(resolve, 300));
         setCustomers(mockCustomers);
       } else {
         setCustomers(data);
@@ -76,6 +78,8 @@ export const useAdminData = (isAuthenticated: boolean) => {
       console.error('Error fetching customers:', error);
       // Use mock data in case of error
       console.log('Error fetching customers, using mock data');
+      // Short delay to prevent immediate flicker
+      await new Promise(resolve => setTimeout(resolve, 300));
       setCustomers(mockCustomers);
       
       toast({
@@ -111,14 +115,19 @@ export const useAdminData = (isAuthenticated: boolean) => {
     }
   };
 
-  const handleUploadSuccess = () => {
+  const handleUploadSuccess = useCallback(() => {
     toast({
       title: "Upload successful",
       description: "Document has been uploaded successfully",
     });
     // Refresh statistics after upload
     fetchStats();
-  };
+  }, [toast]);
+
+  const refreshData = useCallback(() => {
+    fetchCustomers();
+    fetchStats();
+  }, []);
 
   return {
     customers,
@@ -126,9 +135,6 @@ export const useAdminData = (isAuthenticated: boolean) => {
     isLoadingCustomers,
     isLoadingStats,
     handleUploadSuccess,
-    refreshData: () => {
-      fetchCustomers();
-      fetchStats();
-    }
+    refreshData
   };
 };

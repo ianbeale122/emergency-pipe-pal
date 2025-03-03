@@ -77,14 +77,10 @@ const AdminTabContent = ({
       </TabsContent>
       
       <TabsContent value="customers" className="bg-slate-900 rounded-lg shadow-lg p-6 text-white border border-indigo-900/20">
-        {isLoadingCustomers ? (
-          <div className="text-center py-8">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
-            <p className="mt-4 text-indigo-300">Loading customers...</p>
-          </div>
-        ) : (
-          <CustomerList customers={customers} />
-        )}
+        <CustomerList 
+          customers={customers} 
+          isLoading={isLoadingCustomers} 
+        />
       </TabsContent>
       
       <TabsContent value="upload" className="bg-slate-900 rounded-lg shadow-lg border border-indigo-900/20">
