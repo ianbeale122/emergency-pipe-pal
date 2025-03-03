@@ -2,7 +2,7 @@
 import { User, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CustomerDetails from './CustomerDetails';
-import { Customer } from './types';
+import { Customer } from '@/hooks/useAdminData';
 import { mockCustomerExtendedData } from './customerMockData';
 
 interface CustomerCardProps {
@@ -17,7 +17,6 @@ const CustomerCard = ({ customer, expandedCustomer, toggleExpand }: CustomerCard
   
   return (
     <div 
-      key={customer.id} 
       className={`bg-slate-800 rounded-lg p-4 border ${isExpanded ? 'border-indigo-500' : 'border-slate-700'} hover:border-indigo-800 transition-colors`}
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">

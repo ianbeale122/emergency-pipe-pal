@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { BadgeCheck, Clock, XCircle, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,7 @@ interface StatusFilterProps {
   };
 }
 
-const StatusFilter: React.FC<StatusFilterProps> = ({ 
+const StatusFilter: React.FC<StatusFilterProps> = memo(({ 
   selectedStatus, 
   onStatusChange,
   counts
@@ -49,6 +49,8 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
       ))}
     </div>
   );
-};
+});
+
+StatusFilter.displayName = 'StatusFilter';
 
 export default StatusFilter;

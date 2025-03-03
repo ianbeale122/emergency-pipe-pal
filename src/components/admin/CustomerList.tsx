@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Customer } from '@/hooks/useAdminData';
 import CustomerCard from '@/components/admin/customers/CustomerCard';
 import CustomerSearch from '@/components/admin/customers/CustomerSearch';
@@ -7,6 +7,7 @@ import StatusFilter from '@/components/admin/customers/StatusFilter';
 import EmptyCustomerState from '@/components/admin/customers/EmptyCustomerState';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { mockCustomerExtendedData } from '@/components/admin/customers/customerMockData';
 
 interface CustomerListProps {
   customers: Customer[];
@@ -17,32 +18,34 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
 
+  // Count customers by mocked status
   const countByStatus = {
     all: customers.length,
-    active: customers.filter(c => c.status === 'active').length,
-    pending: customers.filter(c => c.status === 'pending').length,
-    inactive: customers.filter(c => c.status === 'inactive').length,
+    active: customers.filter(c => mockCustomerExtendedData[c.id]?.status === 'active').length,
+    pending: customers.filter(c => mockCustomerExtendedData[c.id]?.status === 'pending').length,
+    inactive: customers.filter(c => mockCustomerExtendedData[c.id]?.status === 'inactive').length,
   };
 
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-  };
+  const toggleExpand = useCallback((customerId: string) => {
+    setExpandedCustomer(prev => prev === customerId ? null : customerId);
+  }, []);
 
-  const handleStatusChange = (status: string) => {
+  const handleStatusChange = useCallback((status: string) => {
     setStatusFilter(status);
-  };
+  }, []);
 
-  const handleSort = (field: string) => {
+  const handleSort = useCallback((field: string) => {
     if (sortBy === field) {
       // Toggle direction if clicking the same field
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
     } else {
       // New field, default to ascending
       setSortBy(field);
       setSortDirection('asc');
     }
-  };
+  }, [sortBy]);
 
   const filteredCustomers = customers
     .filter(customer => {
@@ -51,8 +54,9 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
         customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.email.toLowerCase().includes(searchTerm.toLowerCase());
       
-      // Filter by status
-      const statusMatch = statusFilter === 'all' || customer.status === statusFilter;
+      // Filter by status using the mock data
+      const customerStatus = mockCustomerExtendedData[customer.id]?.status;
+      const statusMatch = statusFilter === 'all' || customerStatus === statusFilter;
       
       return searchMatch && statusMatch;
     })
@@ -65,7 +69,10 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
         case 'email':
           return a.email.localeCompare(b.email) * direction;
         case 'date':
-          return (new Date(a.joined_date).getTime() - new Date(b.joined_date).getTime()) * direction;
+          // Use joined date from mock data
+          const dateA = mockCustomerExtendedData[a.id]?.joinDate || '';
+          const dateB = mockCustomerExtendedData[b.id]?.joinDate || '';
+          return (new Date(dateA).getTime() - new Date(dateB).getTime()) * direction;
         default:
           return 0;
       }
@@ -74,7 +81,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <CustomerSearch onSearch={handleSearch} />
+        <CustomerSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <StatusFilter 
           selectedStatus={statusFilter} 
           onStatusChange={handleStatusChange} 
@@ -117,7 +124,12 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredCustomers.map(customer => (
-            <CustomerCard key={customer.id} customer={customer} />
+            <CustomerCard 
+              key={customer.id} 
+              customer={customer} 
+              expandedCustomer={expandedCustomer}
+              toggleExpand={toggleExpand}
+            />
           ))}
         </div>
       )}
