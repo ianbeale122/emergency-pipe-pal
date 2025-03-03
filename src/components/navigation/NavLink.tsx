@@ -2,6 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 interface NavLinkProps {
   href: string;
@@ -10,9 +11,10 @@ interface NavLinkProps {
   className?: string;
   icon?: LucideIcon;
   isBottomNav?: boolean;
+  children?: ReactNode;
 }
 
-export const NavLink = ({ href, label, onClick, className, icon: Icon, isBottomNav }: NavLinkProps) => {
+export const NavLink = ({ href, label, onClick, className, icon: Icon, isBottomNav, children }: NavLinkProps) => {
   const location = useLocation();
   const isActive = location.pathname === href;
   
@@ -31,6 +33,7 @@ export const NavLink = ({ href, label, onClick, className, icon: Icon, isBottomN
       >
         {Icon && <Icon className={cn("h-5 w-5 mb-1", isActive ? "text-primary" : "text-gray-600")} />}
         <span>{label}</span>
+        {children}
         {isActive && (
           <span className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-primary rounded-t-md" />
         )}
@@ -52,6 +55,7 @@ export const NavLink = ({ href, label, onClick, className, icon: Icon, isBottomN
       )}
     >
       {label}
+      {children}
     </Link>
   );
 };
