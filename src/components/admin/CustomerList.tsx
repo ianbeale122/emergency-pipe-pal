@@ -8,6 +8,7 @@ import EmptyCustomerState from '@/components/admin/customers/EmptyCustomerState'
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { mockCustomerExtendedData } from '@/components/admin/customers/customerMockData';
+import { StatusFilterType } from '@/components/admin/customers/types';
 
 interface CustomerListProps {
   customers: Customer[];
@@ -15,7 +16,7 @@ interface CustomerListProps {
 
 const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<StatusFilterType>('all');
   const [sortBy, setSortBy] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
@@ -32,7 +33,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
     setExpandedCustomer(prev => prev === customerId ? null : customerId);
   }, []);
 
-  const handleStatusChange = useCallback((status: string) => {
+  const handleStatusChange = useCallback((status: StatusFilterType) => {
     setStatusFilter(status);
   }, []);
 
@@ -79,10 +80,14 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
       }
     }), [customers, searchTerm, statusFilter, sortBy, sortDirection]);
 
+  const handleSearchChange = useCallback((term: string) => {
+    setSearchTerm(term);
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <CustomerSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <CustomerSearch searchTerm={searchTerm} setSearchTerm={handleSearchChange} />
         <StatusFilter 
           selectedStatus={statusFilter} 
           onStatusChange={handleStatusChange} 

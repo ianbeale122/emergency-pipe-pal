@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { StatusFilterType } from './types';
 
 interface StatusFilterProps {
-  selectedStatus: string;
-  onStatusChange: (status: string) => void;
+  selectedStatus: StatusFilterType;
+  onStatusChange: (status: StatusFilterType) => void;
   counts: {
     all: number;
     active: number;
@@ -16,12 +16,17 @@ interface StatusFilterProps {
   };
 }
 
-const StatusFilter: React.FC<StatusFilterProps> = memo(({ 
+const StatusFilter: React.FC<StatusFilterProps> = ({ 
   selectedStatus, 
   onStatusChange,
   counts
 }) => {
-  const statuses = [
+  const statuses: {
+    id: StatusFilterType;
+    label: string;
+    icon: React.ReactNode;
+    count: number;
+  }[] = [
     { id: 'all', label: 'All Customers', icon: <Users className="h-4 w-4 mr-2" />, count: counts.all },
     { id: 'active', label: 'Active', icon: <BadgeCheck className="h-4 w-4 mr-2 text-green-500" />, count: counts.active },
     { id: 'pending', label: 'Pending', icon: <Clock className="h-4 w-4 mr-2 text-amber-500" />, count: counts.pending },
@@ -50,8 +55,8 @@ const StatusFilter: React.FC<StatusFilterProps> = memo(({
       ))}
     </div>
   );
-});
+};
 
 StatusFilter.displayName = 'StatusFilter';
 
-export default StatusFilter;
+export default memo(StatusFilter);

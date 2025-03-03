@@ -1,4 +1,5 @@
 
+import React, { memo } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
@@ -7,7 +8,7 @@ interface CustomerSearchProps {
   setSearchTerm: (term: string) => void;
 }
 
-const CustomerSearch = ({ searchTerm, setSearchTerm }: CustomerSearchProps) => {
+const CustomerSearch: React.FC<CustomerSearchProps> = memo(({ searchTerm, setSearchTerm }) => {
   const handleClearSearch = () => {
     setSearchTerm('');
   };
@@ -33,6 +34,8 @@ const CustomerSearch = ({ searchTerm, setSearchTerm }: CustomerSearchProps) => {
       )}
     </div>
   );
-};
+});
+
+CustomerSearch.displayName = 'CustomerSearch';
 
 export default CustomerSearch;

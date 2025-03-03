@@ -1,12 +1,12 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Search, Users } from 'lucide-react';
 
 interface EmptyCustomerStateProps {
   searchTerm: string;
 }
 
-const EmptyCustomerState: React.FC<EmptyCustomerStateProps> = ({ searchTerm }) => {
+const EmptyCustomerState: React.FC<EmptyCustomerStateProps> = memo(({ searchTerm }) => {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
       {searchTerm ? (
@@ -30,6 +30,8 @@ const EmptyCustomerState: React.FC<EmptyCustomerStateProps> = ({ searchTerm }) =
       )}
     </div>
   );
-};
+});
 
-export default React.memo(EmptyCustomerState);
+EmptyCustomerState.displayName = 'EmptyCustomerState';
+
+export default EmptyCustomerState;

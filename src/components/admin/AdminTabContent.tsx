@@ -1,6 +1,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CustomerList from "@/components/admin/CustomerList";
 import DocumentUpload from "@/components/admin/DocumentUpload";
 import DashboardOverview from "@/components/admin/dashboard/DashboardOverview";
@@ -34,12 +34,12 @@ const AdminTabContent = ({
   }, []);
 
   // Update URL when tab changes
-  const handleTabChange = (value: string) => {
+  const handleTabChange = useCallback((value: string) => {
     setActiveTab(value);
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.set("tab", value);
     window.history.pushState({}, "", newUrl);
-  };
+  }, []);
 
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
@@ -97,4 +97,4 @@ const AdminTabContent = ({
   );
 };
 
-export default AdminTabContent;
+export default React.memo(AdminTabContent);
