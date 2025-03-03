@@ -40,12 +40,10 @@ export const fetchUserProfile = async (userId: string): Promise<UserProfile | nu
       };
     }
     
-    const selectQuery = supabase
+    const { data, error } = await supabase
       .from('profiles')
-      .select('*');
-      
-    const result = await selectQuery.eq('user_id', userId);
-    const { data, error } = result;
+      .select('*')
+      .eq('user_id', userId);
       
     if (error) throw error;
     if (!data || data.length === 0) return null;
@@ -112,12 +110,10 @@ export const fetchCertificates = async (userId: string) => {
       return mockCertificates;
     }
     
-    const selectQuery = supabase
+    const { data, error } = await supabase
       .from('certificates')
-      .select('*');
-      
-    const result = await selectQuery.eq('user_id', userId);
-    const { data, error } = result;
+      .select('*')
+      .eq('user_id', userId);
       
     if (error) throw error;
     return data.length ? data : mockCertificates;
@@ -161,12 +157,10 @@ export const fetchInvoices = async (userId: string) => {
       return mockInvoices;
     }
     
-    const selectQuery = supabase
+    const { data, error } = await supabase
       .from('invoices')
-      .select('*');
-      
-    const result = await selectQuery.eq('user_id', userId);
-    const { data, error } = result;
+      .select('*')
+      .eq('user_id', userId);
       
     if (error) throw error;
     return data.length ? data : mockInvoices;
@@ -220,12 +214,9 @@ export const fetchAllInvoices = async (): Promise<Invoice[]> => {
       return mockInvoices;
     }
     
-    const selectQuery = supabase
+    const { data, error } = await supabase
       .from('invoices')
       .select('*');
-      
-    const result = await selectQuery;  
-    const { data, error } = result;
       
     if (error) throw error;
     return data.length ? data : mockInvoices;
@@ -265,12 +256,9 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
       return mockUsers;
     }
     
-    const selectQuery = supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('*');
-      
-    const result = await selectQuery;
-    const { data, error } = result;
       
     if (error) throw error;
     return data.length ? data : mockUsers;
