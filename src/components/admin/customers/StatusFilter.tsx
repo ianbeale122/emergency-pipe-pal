@@ -1,45 +1,52 @@
 
-import { Filter, UserCheck, UserMinus } from 'lucide-react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { StatusFilterType } from './types';
+import { BadgeCheck, Clock, XCircle, Users } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface StatusFilterProps {
-  filterStatus: StatusFilterType;
-  setFilterStatus: (status: StatusFilterType) => void;
+  selectedStatus: string;
+  onStatusChange: (status: string) => void;
+  counts: {
+    all: number;
+    active: number;
+    pending: number;
+    inactive: number;
+  };
 }
 
-const StatusFilter = ({ filterStatus, setFilterStatus }: StatusFilterProps) => {
+const StatusFilter: React.FC<StatusFilterProps> = ({ 
+  selectedStatus, 
+  onStatusChange,
+  counts
+}) => {
+  const statuses = [
+    { id: 'all', label: 'All Customers', icon: <Users className="h-4 w-4 mr-2" />, count: counts.all },
+    { id: 'active', label: 'Active', icon: <BadgeCheck className="h-4 w-4 mr-2 text-green-500" />, count: counts.active },
+    { id: 'pending', label: 'Pending', icon: <Clock className="h-4 w-4 mr-2 text-amber-500" />, count: counts.pending },
+    { id: 'inactive', label: 'Inactive', icon: <XCircle className="h-4 w-4 mr-2 text-red-500" />, count: counts.inactive }
+  ];
+
   return (
-    <div className="flex items-center gap-2">
-      <Filter className="h-4 w-4 text-indigo-400" />
-      <div className="flex rounded-md overflow-hidden">
+    <div className="flex flex-wrap gap-2">
+      {statuses.map(status => (
         <Button
-          variant="outline"
+          key={status.id}
+          variant={selectedStatus === status.id ? "default" : "outline"}
+          className={selectedStatus === status.id 
+            ? "bg-indigo-600 hover:bg-indigo-700" 
+            : "hover:bg-slate-800"
+          }
           size="sm"
-          className={`${filterStatus === 'all' ? 'bg-indigo-700 text-white' : 'bg-slate-800 text-slate-300'} border-slate-700 rounded-none rounded-l-md`}
-          onClick={() => setFilterStatus('all')}
+          onClick={() => onStatusChange(status.id)}
         >
-          All
+          {status.icon}
+          {status.label}
+          <Badge variant="secondary" className="ml-2 bg-slate-700 text-xs">
+            {status.count}
+          </Badge>
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className={`${filterStatus === 'active' ? 'bg-indigo-700 text-white' : 'bg-slate-800 text-slate-300'} border-slate-700 border-l-0 rounded-none`}
-          onClick={() => setFilterStatus('active')}
-        >
-          <UserCheck className="mr-1 h-4 w-4" />
-          Active
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className={`${filterStatus === 'inactive' ? 'bg-indigo-700 text-white' : 'bg-slate-800 text-slate-300'} border-slate-700 border-l-0 rounded-none rounded-r-md`}
-          onClick={() => setFilterStatus('inactive')}
-        >
-          <UserMinus className="mr-1 h-4 w-4" />
-          Inactive
-        </Button>
-      </div>
+      ))}
     </div>
   );
 };
