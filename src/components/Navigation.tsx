@@ -11,6 +11,7 @@ import { DesktopNav } from "./navigation/DesktopNav";
 import { MobileMenu } from "./navigation/MobileMenu";
 import { BottomNav } from "./navigation/BottomNav";
 import { isClerkAvailable } from "./navigation/ClerkUtil";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,7 +32,7 @@ export const Navigation = () => {
     { href: "/customer-portal", label: "Customer Portal" },
   ];
   
-  // Admin link
+  // Admin link - we'll still define it for the bottom nav
   const adminLink = { 
     href: "/admin", 
     label: (
@@ -73,11 +74,11 @@ export const Navigation = () => {
               )}
             </Link>
             
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - admin link removed */}
             <DesktopNav 
               links={links} 
               protectedLinks={protectedLinks}
-              adminLink={isAdminRoute ? null : adminLink}
+              adminLink={null}
               clerkAvailable={clerkAvailable}
               isAdminRoute={isAdminRoute}
             />
@@ -100,12 +101,12 @@ export const Navigation = () => {
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Mobile Navigation - admin link removed */}
           <MobileMenu
             isOpen={isMenuOpen}
             links={links}
             protectedLinks={protectedLinks}
-            adminLink={isAdminRoute ? null : adminLink}
+            adminLink={null}
             clerkAvailable={clerkAvailable}
             isAdminRoute={isAdminRoute}
             onLinkClick={() => setIsMenuOpen(false)}
@@ -118,6 +119,25 @@ export const Navigation = () => {
       
       {/* Add padding to the bottom of the page to account for the bottom nav */}
       <div className="pb-16 md:pb-0"></div>
+      
+      {/* Add a discreet admin button at the bottom of desktop view */}
+      <div className="fixed bottom-4 right-4 hidden md:block">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link 
+                to="/admin" 
+                className="text-gray-400 hover:text-gray-600 bg-white p-2 rounded-full shadow-sm border border-gray-200 flex items-center justify-center"
+              >
+                <Shield className="h-4 w-4" />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Admin Access</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </>
   );
 };

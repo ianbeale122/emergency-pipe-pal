@@ -49,15 +49,7 @@ export const MobileMenu = ({
             />
           ))}
           
-          {adminLink && (
-            <NavLink
-              key={adminLink.href}
-              href={adminLink.href}
-              label={adminLink.label as string}
-              onClick={onLinkClick}
-              className="block bg-indigo-100 rounded-md my-1"
-            />
-          )}
+          {/* Admin link removed from here */}
         </SignedIn>
       ) : (
         // Show protected links when Clerk is not available
@@ -72,15 +64,7 @@ export const MobileMenu = ({
             />
           ))}
           
-          {adminLink && (
-            <NavLink
-              key={adminLink.href}
-              href={adminLink.href}
-              label={adminLink.label as string}
-              onClick={onLinkClick}
-              className="block bg-indigo-100 rounded-md my-1"
-            />
-          )}
+          {/* Admin link removed from here */}
         </>
       )}
       

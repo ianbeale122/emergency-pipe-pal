@@ -1,4 +1,3 @@
-
 import { NavLink } from "./NavLink";
 import { AuthButtons } from "./AuthButtons";
 import { SignedIn } from "@clerk/clerk-react";
@@ -31,15 +30,6 @@ export const DesktopNav = ({ links, protectedLinks, adminLink, clerkAvailable, i
               label={link.label}
             />
           ))}
-          
-          {adminLink && (
-            <NavLink
-              key={adminLink.href}
-              href={adminLink.href}
-              label={adminLink.label as string}
-              className="bg-indigo-100 hover:bg-indigo-200"
-            />
-          )}
         </SignedIn>
       ) : (
         // Show protected links when Clerk is not available
@@ -51,15 +41,6 @@ export const DesktopNav = ({ links, protectedLinks, adminLink, clerkAvailable, i
               label={link.label}
             />
           ))}
-          
-          {adminLink && (
-            <NavLink
-              key={adminLink.href}
-              href={adminLink.href}
-              label={adminLink.label as string}
-              className="bg-indigo-100 hover:bg-indigo-200"
-            />
-          )}
         </>
       )}
       
