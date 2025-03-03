@@ -51,6 +51,16 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ customers, onUploadSucc
       return;
     }
 
+    // Check if Supabase is properly configured
+    if (supabase.storage === undefined) {
+      toast({
+        title: "Configuration Error",
+        description: "Supabase is not properly configured. Please set up your Supabase credentials.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsUploading(true);
     setUploadProgress(0);
 
