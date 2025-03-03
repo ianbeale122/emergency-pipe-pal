@@ -44,8 +44,8 @@ const Index = () => {
           <motion.img 
             src="/lovable-uploads/6c4f1fb6-e6ec-4ae1-9b8e-c18cce73a22d.png"
             alt="GPS Plumbing Logo"
-            className="h-40 w-auto"
-            animate={{ y: [0, -15, 0] }}
+            className="h-24 w-auto" // Reduced from h-40 to h-24
+            animate={{ y: [0, -10, 0] }} // Reduced bounce height from -15 to -10
             transition={{ 
               repeat: 1, 
               duration: 1,
@@ -54,9 +54,9 @@ const Index = () => {
           />
           <motion.div
             initial={{ width: 0 }}
-            animate={{ width: "100%" }}
+            animate={{ width: "80%" }} // Reduced from 100% to 80%
             transition={{ duration: 2, delay: 0.5 }}
-            className="h-1 bg-primary mt-4 rounded-full"
+            className="h-1 bg-primary mt-4 rounded-full max-w-[200px]" // Added max-width
           />
         </motion.div>
       </div>
