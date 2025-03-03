@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Lock, User } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Lock, Mail } from 'lucide-react';
 
 interface AdminLoginProps {
   onLogin: (email: string, password: string) => void;
@@ -12,52 +13,67 @@ interface AdminLoginProps {
 const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    
+    // Simulate a bit of loading time
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
     onLogin(email, password);
+    setIsLoading(false);
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">Admin Login</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <div className="relative">
-            <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="email"
-              type="email"
-              value={email}
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Admin Login</CardTitle>
+        <CardDescription>
+          Access the admin portal to manage customers and documents
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              Email
+            </Label>
+            <Input 
+              id="email" 
+              type="email" 
+              value={email} 
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@example.com"
-              className="pl-10"
               required
             />
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="password"
-              type="password"
-              value={password}
+          
+          <div className="space-y-2">
+            <Label htmlFor="password" className="flex items-center gap-2">
+              <Lock className="h-4 w-4" />
+              Password
+            </Label>
+            <Input 
+              id="password" 
+              type="password" 
+              value={password} 
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="pl-10"
               required
             />
           </div>
-        </div>
-        <Button type="submit" className="w-full">Log in</Button>
-        <p className="text-xs text-center text-muted-foreground mt-4">
-          For demonstration purposes: admin@example.com / admin123
-        </p>
-      </form>
-    </div>
+          
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
+          </Button>
+        </form>
+      </CardContent>
+      <CardFooter className="flex justify-center text-sm text-muted-foreground">
+        <p>For demo: admin@example.com / admin123</p>
+      </CardFooter>
+    </Card>
   );
 };
 
