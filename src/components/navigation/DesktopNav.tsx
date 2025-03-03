@@ -2,6 +2,8 @@
 import { NavLink } from "./NavLink";
 import { AuthButtons } from "./AuthButtons";
 import { SignedIn } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
+import { Shield } from "lucide-react";
 
 interface DesktopNavProps {
   links: Array<{ href: string; label: string }>;
@@ -55,6 +57,15 @@ export const DesktopNav = ({
           ))}
         </>
       )}
+      
+      {/* Admin Portal Button */}
+      <Link
+        to="/admin"
+        className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+      >
+        <Shield className="h-4 w-4" />
+        Admin
+      </Link>
       
       <div className="pl-4 border-l border-gray-200">
         <AuthButtons clerkAvailable={clerkAvailable} />
