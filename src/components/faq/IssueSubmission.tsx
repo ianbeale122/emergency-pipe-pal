@@ -10,10 +10,10 @@ const IssueSubmission = () => {
 
   return (
     <>
-      {/* Floating Submit Issue Button */}
+      {/* Floating Submit Issue Button - position adjusted to avoid bottom nav */}
       <Button 
         onClick={() => setIsSheetOpen(true)}
-        className="fixed bottom-20 right-6 md:bottom-6 md:right-6 z-40 rounded-full shadow-lg"
+        className="fixed bottom-24 right-6 md:bottom-6 md:right-6 z-50 rounded-full shadow-lg"
         size="lg"
       >
         <Plus className="mr-2" />
