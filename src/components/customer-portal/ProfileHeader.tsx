@@ -2,11 +2,14 @@
 import { Button } from "@/components/ui/button";
 
 interface ProfileHeaderProps {
+  firstName: string;
+  lastName: string;
+  email: string;
   isEditing: boolean;
   onEditClick: () => void;
 }
 
-const ProfileHeader = ({ isEditing, onEditClick }: ProfileHeaderProps) => {
+const ProfileHeader = ({ firstName, lastName, email, isEditing, onEditClick }: ProfileHeaderProps) => {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
       <div>

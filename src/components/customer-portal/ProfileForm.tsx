@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,11 +12,7 @@ interface ProfileFormProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  } | null;
+  onEdit: () => void;
 }
 
 const ProfileForm = ({ 
@@ -25,8 +20,8 @@ const ProfileForm = ({
   isEditing, 
   onInputChange, 
   onSubmit, 
-  onCancel, 
-  user 
+  onCancel,
+  onEdit
 }: ProfileFormProps) => {
   return (
     <form onSubmit={onSubmit} className="space-y-4">

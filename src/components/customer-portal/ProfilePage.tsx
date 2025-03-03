@@ -48,6 +48,8 @@ const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
         firstName={user?.firstName || ""} 
         lastName={user?.lastName || ""} 
         email={user?.email || ""}
+        isEditing={isEditing}
+        onEditClick={() => setIsEditing(true)}
       />
       
       <Card>
