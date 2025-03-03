@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { SignedIn, UserButton } from "@clerk/clerk-react";
@@ -63,16 +63,8 @@ export const Navigation = () => {
               )}
             </Link>
             
-            {/* Admin Button for Mobile - Positioned at the top */}
+            {/* Admin Button removed from mobile top nav */}
             <div className="flex items-center md:hidden">
-              <Link 
-                to="/admin" 
-                className="mr-3 bg-white text-indigo-600 border border-indigo-200 px-3 py-1.5 rounded-md shadow-sm hover:bg-indigo-50 transition-colors flex items-center"
-              >
-                <Shield className="h-3.5 w-3.5 mr-1" />
-                Admin
-              </Link>
-              
               {clerkAvailable && (
                 <SignedIn>
                   <UserButton afterSignOutUrl="/" />

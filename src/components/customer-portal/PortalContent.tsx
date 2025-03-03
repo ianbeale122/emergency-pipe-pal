@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom";
+import { Shield } from "lucide-react";
 
 // Import components
 import SearchBar from "@/components/customer-portal/SearchBar";
@@ -161,6 +163,17 @@ const PortalContent = ({
       {/* Add a discrete footer with copyright at the very bottom */}
       <div className="text-center text-xs text-gray-400 mt-12 pb-20 md:pb-4">
         © 2024 GPS Plumbing. All rights reserved.
+        
+        {/* Admin access link - very discreet at the bottom */}
+        <div className="mt-8 mb-4 opacity-30 hover:opacity-60 transition-opacity">
+          <Link 
+            to="/admin" 
+            className="text-gray-400 inline-flex items-center text-xs"
+          >
+            <Shield className="h-3 w-3 mr-1" />
+            Staff Access
+          </Link>
+        </div>
       </div>
     </>
   );
