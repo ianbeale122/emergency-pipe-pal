@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 // Get environment variables
@@ -17,9 +16,7 @@ export const supabase = supabaseUrl
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
       },
       from: () => ({
-        select: () => ({ 
-          eq: () => Promise.resolve({ data: [], error: null }) 
-        }),
+        select: () => Promise.resolve({ data: [], error: null }),
         insert: () => Promise.resolve({ data: null, error: null }),
         update: () => ({ 
           eq: () => Promise.resolve({ data: null, error: null }) 

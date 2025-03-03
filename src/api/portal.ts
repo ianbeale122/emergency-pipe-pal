@@ -1,4 +1,3 @@
-
 import { supabase } from "@/lib/supabase";
 
 // Types
@@ -217,11 +216,10 @@ export const fetchAllInvoices = async (): Promise<Invoice[]> => {
       return mockInvoices;
     }
     
-    const response = await supabase
+    const { data, error } = await supabase
       .from('invoices')
       .select('*');
       
-    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockInvoices;
   } catch (error) {
@@ -260,11 +258,10 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
       return mockUsers;
     }
     
-    const response = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('*');
       
-    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockUsers;
   } catch (error) {
