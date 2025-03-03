@@ -53,7 +53,7 @@ export const MobileMenu = ({
             <NavLink
               key={adminLink.href}
               href={adminLink.href}
-              label={adminLink.label}
+              label={adminLink.label as string}
               onClick={onLinkClick}
               className="block bg-indigo-100 rounded-md my-1"
             />
@@ -76,7 +76,7 @@ export const MobileMenu = ({
             <NavLink
               key={adminLink.href}
               href={adminLink.href}
-              label={adminLink.label}
+              label={adminLink.label as string}
               onClick={onLinkClick}
               className="block bg-indigo-100 rounded-md my-1"
             />

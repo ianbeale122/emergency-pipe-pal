@@ -36,7 +36,7 @@ export const DesktopNav = ({ links, protectedLinks, adminLink, clerkAvailable, i
             <NavLink
               key={adminLink.href}
               href={adminLink.href}
-              label={adminLink.label}
+              label={adminLink.label as string}
               className="bg-indigo-100 hover:bg-indigo-200"
             />
           )}
@@ -56,7 +56,7 @@ export const DesktopNav = ({ links, protectedLinks, adminLink, clerkAvailable, i
             <NavLink
               key={adminLink.href}
               href={adminLink.href}
-              label={adminLink.label}
+              label={adminLink.label as string}
               className="bg-indigo-100 hover:bg-indigo-200"
             />
           )}

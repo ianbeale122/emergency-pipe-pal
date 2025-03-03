@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
@@ -85,17 +84,30 @@ const PortalContent = ({
   };
 
   const handleProfileUpdate = (updatedProfile: UpdatedProfileData) => {
-    // Update the local user state
     setUpdatedUser({
       firstName: updatedProfile.firstName,
       lastName: updatedProfile.lastName,
       email: updatedProfile.email
     });
     
-    // Pass the updated profile to the parent component if the callback exists
     if (onProfileUpdate) {
       onProfileUpdate(updatedProfile);
     }
+  };
+
+  const goToAdminPortal = () => {
+    localStorage.removeItem("adminAuth");
+    
+    if (user && user.email === "beale122@gmail.com") {
+      localStorage.setItem("adminEmail", user.email);
+      
+      toast({
+        title: "Redirecting to admin portal",
+        description: "Use your customer portal credentials to log in",
+      });
+    }
+    
+    window.location.href = '/admin';
   };
 
   return (
@@ -105,6 +117,8 @@ const PortalContent = ({
         onLogout={onLogout}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        onAdminClick={goToAdminPortal}
+        isAdmin={user?.email === "beale122@gmail.com"}
       />
       
       {activeTab !== "profile" && (
@@ -120,7 +134,6 @@ const PortalContent = ({
         activeTab={activeTab} 
         onTabChange={setActiveTab}
       >
-        {/* Dashboard Tab */}
         <TabsContent value="dashboard" className="animate-fade-in">
           <DashboardTab 
             stats={stats}
@@ -131,7 +144,6 @@ const PortalContent = ({
           />
         </TabsContent>
         
-        {/* Certificates Tab */}
         <TabsContent value="certificates" className="animate-fade-in">
           <CertificatesTab 
             certificates={filteredCertificates}
@@ -139,7 +151,6 @@ const PortalContent = ({
           />
         </TabsContent>
         
-        {/* Invoices Tab */}
         <TabsContent value="invoices" className="animate-fade-in">
           <InvoicesTab 
             invoices={filteredInvoices}
@@ -147,7 +158,6 @@ const PortalContent = ({
           />
         </TabsContent>
         
-        {/* FAQ Video Tutorials Tab */}
         <TabsContent value="faq" className="animate-fade-in">
           <FaqVideosTab 
             videos={filteredFaqVideos}
@@ -155,7 +165,6 @@ const PortalContent = ({
           />
         </TabsContent>
         
-        {/* Profile Tab */}
         <TabsContent value="profile" className="animate-fade-in">
           <ProfilePage
             user={updatedUser}
