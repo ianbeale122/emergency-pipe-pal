@@ -2,7 +2,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { Customer } from '@/hooks/useAdminData';
 import CustomerCard from '@/components/admin/customers/CustomerCard';
-import CustomerSearch from '@/components/admin/customers/CustomerSearch';
 import StatusFilter from '@/components/admin/customers/StatusFilter';
 import EmptyCustomerState from '@/components/admin/customers/EmptyCustomerState';
 import { ArrowUpDown } from 'lucide-react';
@@ -16,7 +15,6 @@ interface CustomerListProps {
 }
 
 const CustomerList: React.FC<CustomerListProps> = ({ customers, isLoading = false }) => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilterType>('all');
   const [sortBy, setSortBy] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -49,26 +47,17 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers, isLoading = fals
     }
   }, [sortBy]);
 
-  const handleSearchChange = useCallback((term: string) => {
-    setSearchTerm(term);
-  }, []);
-
   // Memoized filtered customers to prevent unnecessary re-renders
   const filteredCustomers = useMemo(() => {
     if (isLoading) return [];
     
     return customers
       .filter(customer => {
-        // Filter by search term
-        const searchMatch = 
-          customer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          customer.email.toLowerCase().includes(searchTerm.toLowerCase());
-        
         // Filter by status using the mock data
         const customerStatus = mockCustomerExtendedData[customer.id]?.status;
         const statusMatch = statusFilter === 'all' || customerStatus === statusFilter;
         
-        return searchMatch && statusMatch;
+        return statusMatch;
       })
       .sort((a, b) => {
         const direction = sortDirection === 'asc' ? 1 : -1;
@@ -87,14 +76,13 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers, isLoading = fals
             return 0;
         }
       });
-  }, [customers, searchTerm, statusFilter, sortBy, sortDirection, isLoading]);
+  }, [customers, statusFilter, sortBy, sortDirection, isLoading]);
 
   // Show a loading state
   if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 opacity-50 pointer-events-none">
-          <div className="relative flex-grow h-10 bg-slate-800 rounded-md animate-pulse"></div>
           <div className="flex gap-2">
             <div className="h-10 w-28 bg-slate-800 rounded-md animate-pulse"></div>
             <div className="h-10 w-28 bg-slate-800 rounded-md animate-pulse"></div>
@@ -121,47 +109,46 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers, isLoading = fals
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <CustomerSearch searchTerm={searchTerm} setSearchTerm={handleSearchChange} />
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <StatusFilter 
           selectedStatus={statusFilter} 
           onStatusChange={handleStatusChange} 
           counts={countByStatus} 
         />
-      </div>
-      
-      <div className="flex justify-end space-x-2 mb-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleSort('name')}
-          className={`text-sm ${sortBy === 'name' ? 'bg-indigo-900/30' : ''}`}
-        >
-          Name
-          {sortBy === 'name' && <ArrowUpDown className="ml-2 h-3 w-3" />}
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleSort('email')}
-          className={`text-sm ${sortBy === 'email' ? 'bg-indigo-900/30' : ''}`}
-        >
-          Email
-          {sortBy === 'email' && <ArrowUpDown className="ml-2 h-3 w-3" />}
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleSort('date')}
-          className={`text-sm ${sortBy === 'date' ? 'bg-indigo-900/30' : ''}`}
-        >
-          Join Date
-          {sortBy === 'date' && <ArrowUpDown className="ml-2 h-3 w-3" />}
-        </Button>
+        
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleSort('name')}
+            className={`text-sm ${sortBy === 'name' ? 'bg-indigo-900/30' : ''}`}
+          >
+            Name
+            {sortBy === 'name' && <ArrowUpDown className="ml-2 h-3 w-3" />}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleSort('email')}
+            className={`text-sm ${sortBy === 'email' ? 'bg-indigo-900/30' : ''}`}
+          >
+            Email
+            {sortBy === 'email' && <ArrowUpDown className="ml-2 h-3 w-3" />}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleSort('date')}
+            className={`text-sm ${sortBy === 'date' ? 'bg-indigo-900/30' : ''}`}
+          >
+            Join Date
+            {sortBy === 'date' && <ArrowUpDown className="ml-2 h-3 w-3" />}
+          </Button>
+        </div>
       </div>
       
       {filteredCustomers.length === 0 ? (
-        <EmptyCustomerState searchTerm={searchTerm} />
+        <EmptyCustomerState searchTerm="" />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 transition-all">
           {filteredCustomers.map(customer => (

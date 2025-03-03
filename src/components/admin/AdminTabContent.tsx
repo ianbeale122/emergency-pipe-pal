@@ -6,6 +6,7 @@ import DocumentUpload from "@/components/admin/DocumentUpload";
 import DashboardOverview from "@/components/admin/dashboard/DashboardOverview";
 import { Customer } from "@/hooks/useAdminData";
 import { LayoutDashboard, Users, Upload } from "lucide-react";
+import CustomerSearch from "@/components/admin/customers/CustomerSearch";
 
 interface AdminTabContentProps {
   customers: Customer[];
@@ -23,6 +24,8 @@ const AdminTabContent = ({
   onUploadSuccess
 }: AdminTabContentProps) => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [globalSearch, setGlobalSearch] = useState("");
+  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>(customers);
 
   // Handle tab change from URL if needed
   useEffect(() => {
@@ -33,6 +36,26 @@ const AdminTabContent = ({
     }
   }, []);
 
+  // Filter customers when search term or customers list changes
+  useEffect(() => {
+    if (globalSearch.trim() === '') {
+      setFilteredCustomers(customers);
+    } else {
+      const searchTerm = globalSearch.toLowerCase();
+      const filtered = customers.filter(
+        customer => 
+          customer.full_name.toLowerCase().includes(searchTerm) || 
+          customer.email.toLowerCase().includes(searchTerm)
+      );
+      setFilteredCustomers(filtered);
+      
+      // If we have search results and we're not on the customers tab, switch to it
+      if (filtered.length > 0 && activeTab !== "customers" && globalSearch.length > 2) {
+        handleTabChange("customers");
+      }
+    }
+  }, [globalSearch, customers]);
+
   // Update URL when tab changes
   const handleTabChange = useCallback((value: string) => {
     setActiveTab(value);
@@ -42,54 +65,69 @@ const AdminTabContent = ({
   }, []);
 
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-      <TabsList className="grid w-full grid-cols-3 bg-slate-800/70 border border-indigo-900/20 p-1 rounded-lg text-slate-200 shadow-md">
-        <TabsTrigger 
-          value="dashboard" 
-          className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white py-3 flex items-center justify-center gap-2"
-        >
-          <LayoutDashboard className="h-4 w-4" />
-          Dashboard
-        </TabsTrigger>
-        <TabsTrigger 
-          value="customers" 
-          className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white py-3 flex items-center justify-center gap-2"
-        >
-          <Users className="h-4 w-4" />
-          Customers
-        </TabsTrigger>
-        <TabsTrigger 
-          value="upload" 
-          className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white py-3 flex items-center justify-center gap-2"
-        >
-          <Upload className="h-4 w-4" />
-          Upload Documents
-        </TabsTrigger>
-      </TabsList>
-      
-      <TabsContent value="dashboard">
-        <DashboardOverview
-          customerCount={customers.length}
-          documentCount={documentCount}
-          isLoadingStats={isLoadingStats}
-          onChangeTab={handleTabChange}
+    <div className="space-y-6">
+      <div className="bg-slate-900 rounded-lg shadow-md p-4 border border-indigo-900/20">
+        <CustomerSearch 
+          searchTerm={globalSearch} 
+          setSearchTerm={setGlobalSearch} 
+          placeholder="Search customers across all sections..." 
         />
-      </TabsContent>
+        <div className="text-xs text-slate-500 mt-2">
+          {globalSearch && filteredCustomers.length > 0 && (
+            <span>Found {filteredCustomers.length} results</span>
+          )}
+        </div>
+      </div>
       
-      <TabsContent value="customers" className="bg-slate-900 rounded-lg shadow-lg p-6 text-white border border-indigo-900/20">
-        <CustomerList 
-          customers={customers} 
-          isLoading={isLoadingCustomers} 
-        />
-      </TabsContent>
-      
-      <TabsContent value="upload" className="bg-slate-900 rounded-lg shadow-lg border border-indigo-900/20">
-        <DocumentUpload 
-          customers={customers} 
-          onUploadSuccess={onUploadSuccess} 
-        />
-      </TabsContent>
-    </Tabs>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3 bg-slate-800/70 border border-indigo-900/20 p-1 rounded-lg text-slate-200 shadow-md">
+          <TabsTrigger 
+            value="dashboard" 
+            className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white py-3 flex items-center justify-center gap-2"
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </TabsTrigger>
+          <TabsTrigger 
+            value="customers" 
+            className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white py-3 flex items-center justify-center gap-2"
+          >
+            <Users className="h-4 w-4" />
+            Customers {globalSearch && filteredCustomers.length > 0 && `(${filteredCustomers.length})`}
+          </TabsTrigger>
+          <TabsTrigger 
+            value="upload" 
+            className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white py-3 flex items-center justify-center gap-2"
+          >
+            <Upload className="h-4 w-4" />
+            Upload Documents
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="dashboard">
+          <DashboardOverview
+            customerCount={customers.length}
+            documentCount={documentCount}
+            isLoadingStats={isLoadingStats}
+            onChangeTab={handleTabChange}
+          />
+        </TabsContent>
+        
+        <TabsContent value="customers" className="bg-slate-900 rounded-lg shadow-lg p-6 text-white border border-indigo-900/20">
+          <CustomerList 
+            customers={filteredCustomers} 
+            isLoading={isLoadingCustomers} 
+          />
+        </TabsContent>
+        
+        <TabsContent value="upload" className="bg-slate-900 rounded-lg shadow-lg border border-indigo-900/20">
+          <DocumentUpload 
+            customers={globalSearch ? filteredCustomers : customers} 
+            onUploadSuccess={onUploadSuccess} 
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 
