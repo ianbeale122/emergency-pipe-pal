@@ -6,10 +6,12 @@ import { SignedIn } from "@clerk/clerk-react";
 interface DesktopNavProps {
   links: Array<{ href: string; label: string }>;
   protectedLinks: Array<{ href: string; label: string }>;
+  adminLink: { href: string; label: React.ReactNode } | null;
   clerkAvailable: boolean;
+  isAdminRoute?: boolean;
 }
 
-export const DesktopNav = ({ links, protectedLinks, clerkAvailable }: DesktopNavProps) => {
+export const DesktopNav = ({ links, protectedLinks, adminLink, clerkAvailable, isAdminRoute }: DesktopNavProps) => {
   return (
     <div className="hidden md:flex items-center space-x-4">
       {links.map((link) => (
@@ -29,6 +31,15 @@ export const DesktopNav = ({ links, protectedLinks, clerkAvailable }: DesktopNav
               label={link.label}
             />
           ))}
+          
+          {adminLink && (
+            <NavLink
+              key={adminLink.href}
+              href={adminLink.href}
+              label={adminLink.label}
+              className="bg-indigo-100 hover:bg-indigo-200"
+            />
+          )}
         </SignedIn>
       ) : (
         // Show protected links when Clerk is not available
@@ -40,6 +51,15 @@ export const DesktopNav = ({ links, protectedLinks, clerkAvailable }: DesktopNav
               label={link.label}
             />
           ))}
+          
+          {adminLink && (
+            <NavLink
+              key={adminLink.href}
+              href={adminLink.href}
+              label={adminLink.label}
+              className="bg-indigo-100 hover:bg-indigo-200"
+            />
+          )}
         </>
       )}
       

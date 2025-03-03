@@ -8,7 +8,9 @@ interface MobileMenuProps {
   isOpen: boolean;
   links: Array<{ href: string; label: string }>;
   protectedLinks: Array<{ href: string; label: string }>;
+  adminLink: { href: string; label: React.ReactNode } | null;
   clerkAvailable: boolean;
+  isAdminRoute?: boolean;
   onLinkClick: () => void;
 }
 
@@ -16,7 +18,9 @@ export const MobileMenu = ({
   isOpen,
   links,
   protectedLinks,
+  adminLink,
   clerkAvailable,
+  isAdminRoute,
   onLinkClick,
 }: MobileMenuProps) => {
   if (!isOpen) return null;
@@ -44,6 +48,16 @@ export const MobileMenu = ({
               className="block"
             />
           ))}
+          
+          {adminLink && (
+            <NavLink
+              key={adminLink.href}
+              href={adminLink.href}
+              label={adminLink.label}
+              onClick={onLinkClick}
+              className="block bg-indigo-100 rounded-md my-1"
+            />
+          )}
         </SignedIn>
       ) : (
         // Show protected links when Clerk is not available
@@ -57,6 +71,16 @@ export const MobileMenu = ({
               className="block"
             />
           ))}
+          
+          {adminLink && (
+            <NavLink
+              key={adminLink.href}
+              href={adminLink.href}
+              label={adminLink.label}
+              onClick={onLinkClick}
+              className="block bg-indigo-100 rounded-md my-1"
+            />
+          )}
         </>
       )}
       

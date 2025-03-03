@@ -5,7 +5,7 @@ import { useProfileForm } from "./useProfileForm";
 import ProfileHeader from "./ProfileHeader";
 import ProfileForm from "./ProfileForm";
 import { useNavigate } from "react-router-dom";
-import { Shield } from "lucide-react";
+import { Shield, ExternalLink } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 export interface UpdatedProfileData {
@@ -86,21 +86,32 @@ const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Admin Access</CardTitle>
-          <CardDescription>
+      {/* Enhanced Admin Access Card */}
+      <Card className="border-indigo-400 bg-gradient-to-r from-slate-900 to-indigo-950 shadow-lg">
+        <CardHeader className="border-b border-indigo-800/30">
+          <CardTitle className="text-white flex items-center gap-2">
+            <Shield className="h-5 w-5 text-indigo-400" fill="#9b87f5" />
+            Admin Access
+          </CardTitle>
+          <CardDescription className="text-indigo-300">
             Access the admin portal to manage customers and documents
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <Button 
             onClick={goToAdminPortal}
-            className="flex items-center gap-2"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white border border-indigo-500 shadow-md flex items-center justify-center gap-2"
+            size="lg"
           >
-            <Shield className="h-4 w-4" />
+            <Shield className="h-5 w-5" />
             Access Admin Portal
+            <ExternalLink className="h-4 w-4 ml-1 opacity-70" />
           </Button>
+          {user?.email === "beale122@gmail.com" && (
+            <p className="text-indigo-300 text-xs mt-2 text-center">
+              You have admin privileges
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

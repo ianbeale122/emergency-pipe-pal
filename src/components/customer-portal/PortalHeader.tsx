@@ -1,8 +1,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Home, FileCheck, Receipt, HelpCircle, Menu, User } from "lucide-react";
+import { Home, FileCheck, Receipt, HelpCircle, Menu, User, Shield } from "lucide-react";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 interface PortalHeaderProps {
   userName: string | null;
@@ -13,15 +14,23 @@ interface PortalHeaderProps {
 
 const PortalHeader = ({ userName, onLogout, activeTab, onTabChange }: PortalHeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const isAdmin = userName && userName.includes("Admin"); // Basic check for admin status
 
   return (
     <div className="mb-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
-            {userName ? `${userName}'s Portal` : 'Customer Portal'}
-          </h1>
-          <p className="text-sm text-muted-foreground">Manage your certificates, invoices and access resources</p>
+        <div className="flex items-center">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 flex items-center gap-2">
+              {userName ? `${userName}'s Portal` : 'Customer Portal'}
+              {isAdmin && (
+                <Badge variant="outline" className="ml-2 bg-indigo-100 text-indigo-800 border-indigo-300">
+                  <Shield className="h-3 w-3 mr-1" /> Admin
+                </Badge>
+              )}
+            </h1>
+            <p className="text-sm text-muted-foreground">Manage your certificates, invoices and access resources</p>
+          </div>
         </div>
         
         <div className="flex items-center gap-4">
