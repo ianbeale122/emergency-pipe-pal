@@ -8,7 +8,8 @@ import {
   fetchFaqVideos, 
   downloadCertificate, 
   downloadInvoice,
-  UserProfile
+  UserProfile,
+  checkIsAdmin
 } from "@/api/portal";
 import { getCurrentUser, signOut } from "@/lib/supabase";
 import { supabase } from "@/lib/supabase";
@@ -34,6 +35,7 @@ interface UseCustomerPortalReturn {
   playVideo: (videoId: number) => void;
   handleLogout: () => Promise<void>;
   userId: string | null;
+  isAdmin: boolean;
 }
 
 export const useCustomerPortal = (): UseCustomerPortalReturn => {
@@ -44,6 +46,7 @@ export const useCustomerPortal = (): UseCustomerPortalReturn => {
   // Authentication states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   
   // Data states
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -61,6 +64,12 @@ export const useCustomerPortal = (): UseCustomerPortalReturn => {
       if (user) {
         setIsAuthenticated(true);
         setUserId(user.id);
+        
+        // Check if user is admin from metadata
+        if (user.user_metadata?.is_admin) {
+          setIsAdmin(true);
+        }
+        
         loadUserData(user.id);
       } else {
         setIsLoading(false);
@@ -73,10 +82,17 @@ export const useCustomerPortal = (): UseCustomerPortalReturn => {
         if (event === 'SIGNED_IN' && session?.user) {
           setIsAuthenticated(true);
           setUserId(session.user.id);
+          
+          // Check if user is admin from metadata
+          if (session.user.user_metadata?.is_admin) {
+            setIsAdmin(true);
+          }
+          
           loadUserData(session.user.id);
         } else if (event === 'SIGNED_OUT') {
           setIsAuthenticated(false);
           setUserId(null);
+          setIsAdmin(false);
           resetData();
         }
       }
@@ -89,22 +105,24 @@ export const useCustomerPortal = (): UseCustomerPortalReturn => {
       authListener.subscription.unsubscribe();
     };
   }, []);
-  
+
   // Load user data function
   const loadUserData = async (userId: string) => {
     setIsLoading(true);
     
     try {
       // Fetch profile, certificates, invoices, and FAQ videos in parallel
-      const [profileData, certificatesData, invoicesData, faqVideosData] = await Promise.all([
+      const [profileData, certificatesData, invoicesData, faqVideosData, adminStatus] = await Promise.all([
         fetchUserProfile(userId),
         fetchCertificates(userId),
         fetchInvoices(userId),
-        fetchFaqVideos()
+        fetchFaqVideos(),
+        checkIsAdmin(userId)
       ]);
       
       if (profileData) {
         setUserProfile(profileData);
+        setIsAdmin(!!profileData.is_admin || adminStatus);
       }
       
       setCertificates(certificatesData);
@@ -226,7 +244,8 @@ export const useCustomerPortal = (): UseCustomerPortalReturn => {
     handleDownload,
     playVideo,
     handleLogout,
-    userId
+    userId,
+    isAdmin
   };
 };
 

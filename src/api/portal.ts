@@ -7,6 +7,18 @@ export interface UserProfile {
   address?: string;
   phone?: string;
   created_at: string;
+  is_admin?: boolean;
+}
+
+export interface Invoice {
+  id: string;
+  user_id: string;
+  amount: number;
+  currency: string;
+  date: string;
+  due_date: string;
+  status: string;
+  description: string;
 }
 
 // API functions with mock data fallbacks
@@ -23,18 +35,20 @@ export const fetchUserProfile = async (userId: string): Promise<UserProfile | nu
         full_name: "John Doe",
         address: "123 Main St, London",
         phone: "+44 123 456789",
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        is_admin: false
       };
     }
     
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('user_id', userId)
-      .single();
+      .eq('user_id', userId);
       
     if (error) throw error;
-    return data;
+    if (!data || data.length === 0) return null;
+    
+    return data[0];
   } catch (error) {
     console.error("Error fetching user profile:", error);
     return null;
@@ -153,6 +167,175 @@ export const fetchInvoices = async (userId: string) => {
   } catch (error) {
     console.error("Error fetching invoices:", error);
     return mockInvoices;
+  }
+};
+
+export const fetchAllInvoices = async (): Promise<Invoice[]> => {
+  // Mock data for when Supabase isn't configured
+  const mockInvoices = [
+    {
+      id: "INV-001",
+      user_id: "user-1",
+      amount: 120,
+      currency: "GBP",
+      date: "2023-02-05",
+      due_date: "2023-03-05",
+      status: "Paid",
+      description: "Annual Boiler Service"
+    },
+    {
+      id: "INV-002",
+      user_id: "user-2",
+      amount: 85,
+      currency: "GBP",
+      date: "2023-04-20",
+      due_date: "2023-05-20",
+      status: "Outstanding",
+      description: "Bathroom Tap Replacement"
+    },
+    {
+      id: "INV-003",
+      user_id: "user-3",
+      amount: 150,
+      currency: "GBP",
+      date: "2023-05-10",
+      due_date: "2023-06-10",
+      status: "Paid",
+      description: "Kitchen Sink Installation"
+    }
+  ];
+  
+  try {
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    
+    if (!isSupabaseConfigured) {
+      console.warn("Supabase not configured, using mock invoice data");
+      return mockInvoices;
+    }
+    
+    const { data, error } = await supabase
+      .from('invoices')
+      .select('*');
+      
+    if (error) throw error;
+    return data.length ? data : mockInvoices;
+  } catch (error) {
+    console.error("Error fetching all invoices:", error);
+    return mockInvoices;
+  }
+};
+
+export const fetchAllUsers = async (): Promise<UserProfile[]> => {
+  // Mock data for when Supabase isn't configured
+  const mockUsers = [
+    {
+      user_id: "user-1",
+      full_name: "John Doe",
+      address: "123 Main St, London",
+      phone: "+44 123 456789",
+      created_at: "2023-01-01T10:00:00.000Z",
+      is_admin: false
+    },
+    {
+      user_id: "user-2",
+      full_name: "Jane Smith",
+      address: "456 High St, Manchester",
+      phone: "+44 987 654321",
+      created_at: "2023-02-15T14:30:00.000Z",
+      is_admin: false
+    }
+  ];
+  
+  try {
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    
+    if (!isSupabaseConfigured) {
+      console.warn("Supabase not configured, using mock user data");
+      return mockUsers;
+    }
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*');
+      
+    if (error) throw error;
+    return data.length ? data : mockUsers;
+  } catch (error) {
+    console.error("Error fetching all users:", error);
+    return mockUsers;
+  }
+};
+
+export const createInvoice = async (invoice: Omit<Invoice, 'id'>): Promise<{ success: boolean; id?: string; error?: string }> => {
+  try {
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    
+    if (!isSupabaseConfigured) {
+      console.warn("Supabase not configured, simulating invoice creation");
+      return { success: true, id: "INV-" + Math.floor(Math.random() * 1000) };
+    }
+    
+    const { data, error } = await supabase
+      .from('invoices')
+      .insert([invoice]);
+      
+    if (error) throw error;
+    
+    return { success: true, id: data && data[0] ? data[0].id : "INV-" + Math.floor(Math.random() * 1000) };
+  } catch (error: any) {
+    console.error("Error creating invoice:", error);
+    return { success: false, error: error.message || "Failed to create invoice" };
+  }
+};
+
+export const updateInvoice = async (id: string, invoice: Partial<Invoice>): Promise<{ success: boolean; error?: string }> => {
+  try {
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    
+    if (!isSupabaseConfigured) {
+      console.warn("Supabase not configured, simulating invoice update");
+      return { success: true };
+    }
+    
+    const { error } = await supabase
+      .from('invoices')
+      .update(invoice)
+      .eq('id', id);
+      
+    if (error) throw error;
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error updating invoice:", error);
+    return { success: false, error: error.message || "Failed to update invoice" };
+  }
+};
+
+export const deleteInvoice = async (id: string): Promise<{ success: boolean; error?: string }> => {
+  try {
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    
+    if (!isSupabaseConfigured) {
+      console.warn("Supabase not configured, simulating invoice deletion");
+      return { success: true };
+    }
+    
+    const { error } = await supabase
+      .from('invoices')
+      .delete()
+      .eq('id', id);
+      
+    if (error) throw error;
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error deleting invoice:", error);
+    return { success: false, error: error.message || "Failed to delete invoice" };
   }
 };
 
@@ -283,5 +466,15 @@ export const submitIssue = async (issue: any) => {
   } catch (error) {
     console.error("Error submitting issue:", error);
     return { success: false, error: "Failed to submit issue. Please try again." };
+  }
+};
+
+export const checkIsAdmin = async (userId: string): Promise<boolean> => {
+  try {
+    const profile = await fetchUserProfile(userId);
+    return !!profile?.is_admin;
+  } catch (error) {
+    console.error("Error checking admin status:", error);
+    return false;
   }
 };

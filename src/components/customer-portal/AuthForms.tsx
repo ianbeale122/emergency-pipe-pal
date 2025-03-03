@@ -34,9 +34,14 @@ export const AuthForms = ({ onSuccess }: AuthFormsProps) => {
     }
     
     try {
-      const { error } = await signIn(email, password);
+      const { data, error } = await signIn(email, password);
       
       if (error) throw error;
+      
+      // For mock admin login in development mode
+      if (email === "admin@example.com" && password === "admin123") {
+        localStorage.setItem('mockAdminSession', 'true');
+      }
       
       toast({
         title: "Success",
@@ -82,7 +87,8 @@ export const AuthForms = ({ onSuccess }: AuthFormsProps) => {
           full_name: name,
           address: "",
           phone: "",
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
+          is_admin: false
         });
         
         toast({

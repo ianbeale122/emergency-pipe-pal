@@ -14,6 +14,7 @@ import Emergency from "./pages/Emergency";
 import CustomerPortal from "./pages/CustomerPortal";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,9 @@ const App = () => {
                 )
               } 
             />
+            
+            {/* Admin Route */}
+            <Route path="/admin" element={<Admin />} />
             
             {/* Auth Routes */}
             <Route path="/sign-in" element={<SignIn />} />

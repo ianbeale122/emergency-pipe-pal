@@ -1,8 +1,12 @@
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { UserProfile } from "@/api/portal";
+import { Menu, LogOut, Settings, User, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
+import { checkIsAdmin } from "@/api/portal";
 
 interface PortalHeaderProps {
   userProfile: UserProfile | null;
@@ -13,84 +17,80 @@ interface PortalHeaderProps {
   setActiveTab: (tab: string) => void;
 }
 
-const PortalHeader = ({ 
-  userProfile, 
-  onLogout, 
-  menuOpen, 
-  setMenuOpen,
-  activeTab,
-  setActiveTab
-}: PortalHeaderProps) => {
+const PortalHeader = ({ userProfile, onLogout, menuOpen, setMenuOpen, activeTab, setActiveTab }: PortalHeaderProps) => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (userProfile?.user_id) {
+        const adminStatus = await checkIsAdmin(userProfile.user_id);
+        setIsAdmin(adminStatus);
+      }
+    };
+    
+    checkAdminStatus();
+  }, [userProfile]);
+
   return (
-    <div className="mb-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
-            {userProfile?.full_name ? `${userProfile.full_name}'s Portal` : 'Customer Portal'}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Manage your certificates, invoices and access resources
-          </p>
-        </div>
-        
+    <div className="flex items-center justify-between py-4 mb-6">
+      <h1 className="text-2xl font-bold">Customer Portal</h1>
+      
+      {userProfile && (
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={onLogout}>
-            Log out
-          </Button>
+          <span className="hidden md:inline text-sm text-muted-foreground">
+            Welcome, {userProfile.full_name}
+          </span>
           
-          {/* Mobile menu button */}
-          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-            <SheetTrigger asChild className="sm:hidden">
-              <Button variant="outline" size="icon" className="shadow-sm">
-                <Menu className="h-5 w-5" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Avatar>
+                  <AvatarImage src="/placeholder.svg" alt={userProfile.full_name} />
+                  <AvatarFallback>
+                    {userProfile.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
               </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[80%] pt-12">
-              <MobileMenu 
-                activeTab={activeTab} 
-                setActiveTab={setActiveTab} 
-                setMenuOpen={setMenuOpen} 
-              />
-            </SheetContent>
-          </Sheet>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              
+              {isAdmin && (
+                <DropdownMenuItem asChild>
+                  <Link to="/admin">
+                    <ShieldCheck className="mr-2 h-4 w-4" />
+                    <span>Admin Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={onLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <Menu />
+          </Button>
         </div>
-      </div>
-    </div>
-  );
-};
-
-interface MobileMenuProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-  setMenuOpen: (open: boolean) => void;
-}
-
-const MobileMenu = ({ activeTab, setActiveTab, setMenuOpen }: MobileMenuProps) => {
-  const { Home, FileCheck, Receipt, HelpCircle } = require("lucide-react");
-  
-  const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "certificates", label: "Certificates", icon: FileCheck },
-    { id: "invoices", label: "Invoices", icon: Receipt },
-    { id: "faq", label: "Video Tutorials", icon: HelpCircle }
-  ];
-  
-  return (
-    <div className="flex flex-col gap-4">
-      {menuItems.map(item => (
-        <Button
-          key={item.id}
-          variant={activeTab === item.id ? "default" : "ghost"}
-          className="justify-start"
-          onClick={() => {
-            setActiveTab(item.id);
-            setMenuOpen(false);
-          }}
-        >
-          <item.icon className="h-5 w-5 mr-2" />
-          {item.label}
-        </Button>
-      ))}
+      )}
     </div>
   );
 };

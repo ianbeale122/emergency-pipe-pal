@@ -20,6 +20,7 @@ export const supabase = supabaseUrl
         select: () => ({ eq: () => ({ data: [], error: null }) }),
         insert: () => ({ data: null, error: null }),
         update: () => ({ eq: () => ({ data: null, error: null }) }),
+        delete: () => ({ eq: () => ({ data: null, error: null }) }),
       }),
       storage: {
         from: () => ({
@@ -32,6 +33,10 @@ export const supabase = supabaseUrl
 export const signIn = async (email: string, password: string) => {
   if (!supabaseUrl) {
     console.warn("Supabase not configured, using mock authentication");
+    // For admin testing in development
+    if (email === "admin@example.com" && password === "admin123") {
+      return { data: { user: { id: 'mock-admin-id', email, user_metadata: { is_admin: true } } }, error: null };
+    }
     return { data: { user: { id: 'mock-user-id', email } }, error: null };
   }
   return await supabase.auth.signInWithPassword({ email, password });
@@ -56,6 +61,11 @@ export const signOut = async () => {
 export const getCurrentUser = async () => {
   if (!supabaseUrl) {
     console.warn("Supabase not configured, using mock user");
+    // Check localStorage for mock admin session
+    const mockAdminSession = localStorage.getItem('mockAdminSession');
+    if (mockAdminSession === 'true') {
+      return { id: 'mock-admin-id', email: 'admin@example.com', user_metadata: { is_admin: true } };
+    }
     // Return mock user for development
     return { id: 'mock-user-id', email: 'test@example.com' };
   }
