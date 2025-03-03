@@ -22,6 +22,8 @@ export const supabase = supabaseUrl
           order: () => ({
             eq: () => Promise.resolve({ data: [], error: null }),
           }),
+          // Make the select function also return a Promise directly for when it's awaited without eq
+          then: (resolve) => resolve({ data: [], error: null }),
         }),
         insert: () => Promise.resolve({ data: null, error: null }),
         update: () => ({ 

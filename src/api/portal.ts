@@ -1,3 +1,4 @@
+
 import { supabase } from "@/lib/supabase";
 
 // Types
@@ -214,9 +215,13 @@ export const fetchAllInvoices = async (): Promise<Invoice[]> => {
       return mockInvoices;
     }
     
-    const { data, error } = await supabase
+    // Modified to await the promise directly
+    const result = await supabase
       .from('invoices')
       .select('*');
+    
+    // Now the result is properly resolved and has data/error properties
+    const { data, error } = result;
       
     if (error) throw error;
     return data.length ? data : mockInvoices;
@@ -256,9 +261,13 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
       return mockUsers;
     }
     
-    const { data, error } = await supabase
+    // Modified to await the promise directly
+    const result = await supabase
       .from('profiles')
       .select('*');
+    
+    // Now the result is properly resolved and has data/error properties
+    const { data, error } = result;
       
     if (error) throw error;
     return data.length ? data : mockUsers;
@@ -380,9 +389,13 @@ export const fetchFaqVideos = async () => {
       return mockVideos;
     }
     
-    const { data, error } = await supabase
+    // Modified to await the promise directly
+    const result = await supabase
       .from('faq_videos')
       .select('*');
+    
+    // Now the result is properly resolved and has data/error properties
+    const { data, error } = result;
       
     if (error) throw error;
     return data.length ? data : mockVideos;
