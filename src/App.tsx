@@ -12,6 +12,7 @@ import LiveChat from "./pages/LiveChat";
 import AnnualService from "./pages/AnnualService";
 import Emergency from "./pages/Emergency";
 import CustomerPortal from "./pages/CustomerPortal";
+import AdminPortal from "./pages/AdminPortal";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
@@ -60,6 +61,9 @@ const App = () => {
                 )
               } 
             />
+            
+            {/* Admin Portal Route */}
+            <Route path="/admin" element={<AdminPortal />} />
             
             {/* Auth Routes */}
             <Route path="/sign-in" element={<SignIn />} />

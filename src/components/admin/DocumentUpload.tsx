@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 interface DocumentUploadProps {
   customers: { id: string; full_name: string }[];
@@ -19,6 +19,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({ customers, onUploadSucc
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
+  const { toast } = useToast();
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
