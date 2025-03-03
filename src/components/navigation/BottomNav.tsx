@@ -36,18 +36,6 @@ export const BottomNav = ({ isAdminRoute }: BottomNavProps) => {
           />
         ))}
       </div>
-      
-      {/* Login button (only if not on portal page) */}
-      {!isAtPortal && (
-        <div className="grid grid-cols-1 w-full border-t border-gray-100">
-          <NavLink
-            href="/customer-portal"
-            label="Login"
-            icon={LogIn}
-            isBottomNav
-          />
-        </div>
-      )}
     </div>
   );
 };

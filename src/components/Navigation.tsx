@@ -67,22 +67,6 @@ export const Navigation = () => {
             
             {/* Mobile top nav */}
             <div className="flex items-center md:hidden">
-              {/* Login icon button for mobile */}
-              {!isAtPortal && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link to="/customer-portal" className="mr-3">
-                        <LogIn className="h-5 w-5 text-primary" />
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Login</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-              
               {clerkAvailable && (
                 <SignedIn>
                   <UserButton afterSignOutUrl="/" />
