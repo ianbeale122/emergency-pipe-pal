@@ -1,7 +1,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useProfileForm } from "./useProfileForm";
 import ProfileHeader from "./ProfileHeader";
 import ProfileForm from "./ProfileForm";
@@ -39,6 +38,8 @@ const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
   } = useProfileForm({ user, onProfileUpdate });
 
   const goToAdminPortal = () => {
+    // Clear any existing admin auth to force login screen
+    localStorage.removeItem("adminAuth");
     navigate('/admin');
   };
 

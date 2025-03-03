@@ -23,16 +23,21 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
     setIsLoading(true);
     setError('');
     
-    // Simulate a bit of loading time
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const success = onLogin(email, password, rememberMe);
-    
-    if (!success) {
-      setError('Invalid email or password');
+    try {
+      // Simulate a bit of loading time
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const success = onLogin(email, password, rememberMe);
+      
+      if (!success) {
+        setError('Invalid email or password');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred during login');
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (

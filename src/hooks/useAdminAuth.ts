@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { useNavigate } from 'react-router-dom';
 
-// Updated admin credentials
+// Admin credentials - DO NOT use this approach in production!
 const ADMIN_CREDENTIALS = {
   email: "beale122@gmail.com",
   password: "1234"
@@ -12,6 +13,7 @@ export const useAdminAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Check if admin is logged in via localStorage on component mount
   useEffect(() => {
@@ -28,6 +30,9 @@ export const useAdminAuth = () => {
     if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
       setIsAuthenticated(true);
       localStorage.setItem("adminAuth", "true");
+      
+      // Explicitly navigate to admin page after successful login
+      navigate('/admin');
       
       // If rememberMe is false, set up automatic logout after session
       if (!rememberMe) {
@@ -64,6 +69,7 @@ export const useAdminAuth = () => {
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("adminAuth");
+    navigate('/admin'); // Navigate back to admin login
     toast({
       title: "Logged out",
       description: "You have been logged out successfully",

@@ -15,7 +15,8 @@ const AdminPortal = () => {
     documents, 
     isLoadingCustomers, 
     isLoadingStats, 
-    handleUploadSuccess 
+    handleUploadSuccess, 
+    refreshData
   } = useAdminData(isAuthenticated);
   
   const navigate = useNavigate();
@@ -27,6 +28,13 @@ const AdminPortal = () => {
       navigate('/admin');
     }
   }, [location.pathname, isAuthenticated, navigate]);
+
+  // Refresh data when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated) {
+      refreshData();
+    }
+  }, [isAuthenticated, refreshData]);
 
   console.log("Admin authentication state:", { isAuthenticated, isLoading });
 
