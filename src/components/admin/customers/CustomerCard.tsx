@@ -18,7 +18,7 @@ const CustomerCard = memo(({ customer, expandedCustomer, toggleExpand }: Custome
   
   return (
     <div 
-      className={`bg-slate-800 rounded-lg p-4 border ${isExpanded ? 'border-indigo-500' : 'border-slate-700'} hover:border-indigo-800 transition-colors`}
+      className={`bg-slate-800 rounded-lg p-3 sm:p-4 border ${isExpanded ? 'border-indigo-500' : 'border-slate-700'} hover:border-indigo-800 transition-colors`}
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-3">
@@ -29,7 +29,7 @@ const CustomerCard = memo(({ customer, expandedCustomer, toggleExpand }: Custome
             <h3 className="font-medium text-white">{customer.full_name}</h3>
             <div className="flex items-center text-sm text-slate-400">
               <Mail className="h-3 w-3 mr-1" />
-              {customer.email}
+              <span className="truncate max-w-[180px] sm:max-w-none">{customer.email}</span>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@ const CustomerCard = memo(({ customer, expandedCustomer, toggleExpand }: Custome
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex-1 sm:flex-none border-slate-700 text-indigo-300 hover:text-white hover:bg-indigo-700 hover:border-indigo-600"
+            className="flex-1 sm:flex-none border-slate-700 text-indigo-300 hover:text-white hover:bg-indigo-700 hover:border-indigo-600 text-xs sm:text-sm px-2 sm:px-3"
             onClick={() => toggleExpand(customer.id)}
           >
             {isExpanded ? 'Hide Details' : 'View Details'}

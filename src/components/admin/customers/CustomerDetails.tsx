@@ -19,41 +19,41 @@ const CustomerDetails = memo(({ extendedData, isExpanded }: CustomerDetailsProps
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {extendedData.phone && (
           <div className="flex items-center text-slate-300">
-            <Phone className="h-4 w-4 mr-2 text-indigo-400" />
-            <span>Phone: {extendedData.phone}</span>
+            <Phone className="h-4 w-4 mr-2 text-indigo-400 flex-shrink-0" />
+            <span className="truncate">{extendedData.phone}</span>
           </div>
         )}
         {extendedData.address && (
           <div className="flex items-center text-slate-300">
-            <MapPin className="h-4 w-4 mr-2 text-indigo-400" />
-            <span>Address: {extendedData.address}</span>
+            <MapPin className="h-4 w-4 mr-2 text-indigo-400 flex-shrink-0" />
+            <span className="truncate">{extendedData.address}</span>
           </div>
         )}
         {extendedData.joinDate && (
           <div className="flex items-center text-slate-300">
-            <Calendar className="h-4 w-4 mr-2 text-indigo-400" />
-            <span>Customer since: {new Date(extendedData.joinDate).toLocaleDateString()}</span>
+            <Calendar className="h-4 w-4 mr-2 text-indigo-400 flex-shrink-0" />
+            <span className="truncate">Customer since: {new Date(extendedData.joinDate).toLocaleDateString()}</span>
           </div>
         )}
         {extendedData.lastService && (
           <div className="flex items-center text-slate-300">
-            <Wrench className="h-4 w-4 mr-2 text-indigo-400" />
-            <span>Last service: {new Date(extendedData.lastService).toLocaleDateString()}</span>
+            <Wrench className="h-4 w-4 mr-2 text-indigo-400 flex-shrink-0" />
+            <span className="truncate">Last service: {new Date(extendedData.lastService).toLocaleDateString()}</span>
           </div>
         )}
       </div>
-      <div className="flex justify-end gap-2 mt-2">
+      <div className="flex flex-col xs:flex-row xs:justify-end gap-2 mt-2">
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-blue-700/30 bg-blue-900/20 text-blue-300 hover:bg-blue-900/30"
+          className="border-blue-700/30 bg-blue-900/20 text-blue-300 hover:bg-blue-900/30 text-xs h-8"
         >
           Services History
         </Button>
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-purple-700/30 bg-purple-900/20 text-purple-300 hover:bg-purple-900/30"
+          className="border-purple-700/30 bg-purple-900/20 text-purple-300 hover:bg-purple-900/30 text-xs h-8"
         >
           Edit Details
         </Button>

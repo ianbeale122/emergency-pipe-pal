@@ -51,15 +51,15 @@ const AdminPortal = () => {
       <div className="bg-slate-950 border-b border-indigo-900/30 shadow-lg">
         <Navigation />
       </div>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 bg-slate-900/70 p-6 rounded-lg shadow-md border border-indigo-900/20">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 mb-16 md:mb-0">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-8 bg-slate-900/70 p-3 sm:p-6 rounded-lg shadow-md border border-indigo-900/20">
           <div>
-            <h1 className="text-3xl font-bold text-white">Admin Portal</h1>
-            <p className="text-indigo-400 mt-1">System Management Interface</p>
+            <h1 className="text-xl sm:text-3xl font-bold text-white">Admin Portal</h1>
+            <p className="text-indigo-400 mt-1 text-sm sm:text-base">System Management Interface</p>
           </div>
           <button 
             onClick={handleLogout}
-            className="mt-4 sm:mt-0 px-5 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors shadow-md"
+            className="mt-4 sm:mt-0 px-3 sm:px-5 py-1.5 sm:py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors shadow-md text-sm"
           >
             Logout
           </button>

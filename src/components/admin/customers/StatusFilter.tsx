@@ -27,10 +27,10 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
     icon: React.ReactNode;
     count: number;
   }[] = [
-    { id: 'all', label: 'All Customers', icon: <Users className="h-4 w-4 mr-2" />, count: counts.all },
-    { id: 'active', label: 'Active', icon: <BadgeCheck className="h-4 w-4 mr-2 text-green-500" />, count: counts.active },
-    { id: 'pending', label: 'Pending', icon: <Clock className="h-4 w-4 mr-2 text-amber-500" />, count: counts.pending },
-    { id: 'inactive', label: 'Inactive', icon: <XCircle className="h-4 w-4 mr-2 text-red-500" />, count: counts.inactive }
+    { id: 'all', label: 'All', icon: <Users className="h-4 w-4 mr-1 sm:mr-2" />, count: counts.all },
+    { id: 'active', label: 'Active', icon: <BadgeCheck className="h-4 w-4 mr-1 sm:mr-2 text-green-500" />, count: counts.active },
+    { id: 'pending', label: 'Pending', icon: <Clock className="h-4 w-4 mr-1 sm:mr-2 text-amber-500" />, count: counts.pending },
+    { id: 'inactive', label: 'Inactive', icon: <XCircle className="h-4 w-4 mr-1 sm:mr-2 text-red-500" />, count: counts.inactive }
   ];
 
   return (
@@ -39,23 +39,22 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
         <Button
           key={status.id}
           variant={selectedStatus === status.id ? "default" : "outline"}
-          className={selectedStatus === status.id 
+          className={`${selectedStatus === status.id 
             ? "bg-indigo-600 hover:bg-indigo-700" 
-            : "hover:bg-slate-800"
-          }
+            : "hover:bg-slate-800"} text-xs sm:text-sm px-2 sm:px-3 h-8 sm:h-9`}
           size="sm"
           onClick={() => onStatusChange(status.id)}
         >
           {status.icon}
-          {status.label}
-          <Badge variant="secondary" className="ml-2 bg-slate-700 text-xs">
+          <span className="xs:inline">{status.label}</span>
+          <Badge variant="secondary" className="ml-1 sm:ml-2 bg-slate-700 text-xs px-1.5 py-0">
             {status.count}
           </Badge>
         </Button>
       ))}
     </div>
   );
-};
+});
 
 StatusFilter.displayName = 'StatusFilter';
 

@@ -31,7 +31,7 @@ const CustomerSearch: React.FC<CustomerSearchProps> = memo(({
         placeholder={placeholder}
         value={searchTerm}
         onChange={handleChange}
-        className="pl-10 border-slate-700 bg-slate-800 text-white placeholder:text-slate-400 focus:border-indigo-500 pr-10"
+        className="pl-10 border-slate-700 bg-slate-800 text-white placeholder:text-slate-400 focus:border-indigo-500 pr-10 h-12 text-base"
       />
       {searchTerm && (
         <button 
@@ -39,7 +39,7 @@ const CustomerSearch: React.FC<CustomerSearchProps> = memo(({
           className="absolute right-3 top-3 text-slate-400 hover:text-white transition-colors"
           aria-label="Clear search"
         >
-          <X className="h-4 w-4" />
+          <X className="h-5 w-5" />
         </button>
       )}
     </div>
