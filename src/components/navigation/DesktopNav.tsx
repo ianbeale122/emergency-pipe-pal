@@ -3,7 +3,7 @@ import { NavLink } from "./NavLink";
 import { AuthButtons } from "./AuthButtons";
 import { SignedIn } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
-import { Shield } from "lucide-react";
+import { Shield, Users } from "lucide-react";
 
 interface DesktopNavProps {
   links: Array<{ href: string; label: string }>;
@@ -19,44 +19,19 @@ interface DesktopNavProps {
 }
 
 export const DesktopNav = ({ 
-  links, 
-  protectedLinks, 
-  adminLink, 
   clerkAvailable, 
   isAdminRoute
 }: DesktopNavProps) => {
   return (
     <div className="hidden md:flex items-center space-x-4">
-      {links.map((link) => (
-        <NavLink
-          key={link.href}
-          href={link.href}
-          label={link.label}
-        />
-      ))}
-      
-      {clerkAvailable ? (
-        <SignedIn>
-          {protectedLinks.map((link) => (
-            <NavLink
-              key={link.href}
-              href={link.href}
-              label={link.label}
-            />
-          ))}
-        </SignedIn>
-      ) : (
-        // Show protected links when Clerk is not available
-        <>
-          {protectedLinks.map((link) => (
-            <NavLink
-              key={link.href}
-              href={link.href}
-              label={link.label}
-            />
-          ))}
-        </>
-      )}
+      {/* Customer Portal Button */}
+      <Link
+        to="/customer-portal"
+        className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 bg-blue-50 text-blue-700 hover:bg-blue-100"
+      >
+        <Users className="h-4 w-4" />
+        Customer Portal
+      </Link>
       
       {/* Admin Portal Button */}
       <Link

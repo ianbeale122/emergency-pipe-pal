@@ -82,9 +82,9 @@ export const Navigation = () => {
               </Button>
             </div>
             
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - simplified */}
             <DesktopNav 
-              links={links} 
+              links={[]}
               protectedLinks={[]}
               adminLink={null}
               clerkAvailable={clerkAvailable}
