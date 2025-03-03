@@ -1,22 +1,16 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from "@clerk/clerk-react";
+import { SignedIn, UserButton } from "@clerk/clerk-react";
 
-// Check if Clerk is available using a safer approach
-const isClerkAvailable = () => {
-  try {
-    return typeof window !== 'undefined' && 'Clerk' in window;
-  } catch (e) {
-    return false;
-  }
-};
+// Import our new component files
+import { DesktopNav } from "./navigation/DesktopNav";
+import { MobileMenu } from "./navigation/MobileMenu";
+import { isClerkAvailable } from "./navigation/ClerkUtil";
 
 export const Navigation = () => {
-  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const clerkAvailable = isClerkAvailable();
 
@@ -46,84 +40,11 @@ export const Navigation = () => {
           </Link>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={cn(
-                  "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                  location.pathname === link.href
-                    ? "bg-primary text-primary-foreground"
-                    : "text-gray-600 hover:bg-gray-100"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-            
-            {clerkAvailable ? (
-              <SignedIn>
-                {protectedLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className={cn(
-                      "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                      location.pathname === link.href
-                        ? "bg-primary text-primary-foreground"
-                        : "text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </SignedIn>
-            ) : (
-              // Show protected links when Clerk is not available
-              <>
-                {protectedLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className={cn(
-                      "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                      location.pathname === link.href
-                        ? "bg-primary text-primary-foreground"
-                        : "text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </>
-            )}
-            
-            <div className="pl-4 border-l border-gray-200">
-              {clerkAvailable ? (
-                <>
-                  <SignedIn>
-                    <UserButton afterSignOutUrl="/" />
-                  </SignedIn>
-                  <SignedOut>
-                    <div className="flex items-center gap-2">
-                      <SignInButton mode="modal">
-                        <Button variant="outline" size="sm">Sign In</Button>
-                      </SignInButton>
-                      <SignUpButton mode="modal">
-                        <Button size="sm">Sign Up</Button>
-                      </SignUpButton>
-                    </div>
-                  </SignedOut>
-                </>
-              ) : (
-                // Show a message or dummy button when Clerk is not available
-                <div className="text-xs text-gray-500">
-                  Auth disabled
-                </div>
-              )}
-            </div>
-          </div>
+          <DesktopNav 
+            links={links} 
+            protectedLinks={protectedLinks}
+            clerkAvailable={clerkAvailable}
+          />
 
           {/* Mobile Menu Button */}
           <div className="flex items-center md:hidden">
@@ -143,77 +64,13 @@ export const Navigation = () => {
         </div>
 
         {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-2">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                onClick={() => setIsMenuOpen(false)}
-                className={cn(
-                  "block px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                  location.pathname === link.href
-                    ? "bg-primary text-primary-foreground"
-                    : "text-gray-600 hover:bg-gray-100"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-            
-            {clerkAvailable ? (
-              <SignedIn>
-                {protectedLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={cn(
-                      "block px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                      location.pathname === link.href
-                        ? "bg-primary text-primary-foreground"
-                        : "text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </SignedIn>
-            ) : (
-              // Show protected links when Clerk is not available
-              <>
-                {protectedLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={cn(
-                      "block px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                      location.pathname === link.href
-                        ? "bg-primary text-primary-foreground"
-                        : "text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </>
-            )}
-            
-            {clerkAvailable && (
-              <SignedOut>
-                <div className="mt-3 space-y-2 px-3">
-                  <SignInButton mode="modal">
-                    <Button variant="outline" className="w-full">Sign In</Button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <Button className="w-full">Sign Up</Button>
-                  </SignUpButton>
-                </div>
-              </SignedOut>
-            )}
-          </div>
-        )}
+        <MobileMenu
+          isOpen={isMenuOpen}
+          links={links}
+          protectedLinks={protectedLinks}
+          clerkAvailable={clerkAvailable}
+          onLinkClick={() => setIsMenuOpen(false)}
+        />
       </div>
     </nav>
   );
