@@ -55,6 +55,11 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Chrome, Safari and Opera */
   }
+
+  /* Bottom nav text sizing */
+  .bottom-nav-text {
+    @apply text-xs truncate max-w-full;
+  }
 }
 
 .from-gray-50 {

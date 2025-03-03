@@ -1,5 +1,5 @@
 
-import { Home, FileQuestion, MessageCircle, CalendarClock, AlertTriangle, User, HelpCircle } from "lucide-react";
+import { Home, FileQuestion, HelpCircle, CalendarClock, AlertTriangle, User } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { isClerkAvailable } from "./ClerkUtil";
