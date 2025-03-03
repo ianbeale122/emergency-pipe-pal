@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Textarea } from "@/components/ui/textarea";
 import { User, Mail, Phone, MapPin, Building } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import DocumentUploadSection from "./DocumentUploadSection";
 
 interface ProfilePageProps {
   user: {
@@ -213,6 +214,9 @@ const ProfilePage = ({ user, onProfileUpdate }: ProfilePageProps) => {
           </form>
         </CardContent>
       </Card>
+      
+      {/* Add Document Upload Section */}
+      <DocumentUploadSection customerId={user?.email || 'guest'} />
     </div>
   );
 };
