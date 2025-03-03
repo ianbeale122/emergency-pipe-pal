@@ -1,31 +1,71 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Get environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create Supabase client with fallback for development
+export const supabase = supabaseUrl 
+  ? createClient(supabaseUrl, supabaseKey)
+  : {
+      auth: {
+        signUp: () => Promise.resolve({ data: { user: null }, error: new Error('Supabase not configured') }),
+        signInWithPassword: () => Promise.resolve({ data: { user: null }, error: new Error('Supabase not configured') }),
+        signOut: () => Promise.resolve({ error: null }),
+        getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      },
+      from: () => ({
+        select: () => ({ eq: () => ({ data: [], error: null }) }),
+        insert: () => ({ data: null, error: null }),
+        update: () => ({ eq: () => ({ data: null, error: null }) }),
+      }),
+      storage: {
+        from: () => ({
+          download: () => Promise.resolve({ data: null, error: null }),
+        }),
+      },
+    };
 
-// Auth helpers
-export const getCurrentUser = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
-};
-
+// Authentication functions
 export const signIn = async (email: string, password: string) => {
+  if (!supabaseUrl) {
+    console.warn("Supabase not configured, using mock authentication");
+    return { data: { user: { id: 'mock-user-id', email } }, error: null };
+  }
   return await supabase.auth.signInWithPassword({ email, password });
 };
 
-export const signUp = async (email: string, password: string, metadata: any = {}) => {
-  return await supabase.auth.signUp({ 
-    email, 
-    password,
-    options: { 
-      data: metadata 
-    }
-  });
+export const signUp = async (email: string, password: string, metadata?: object) => {
+  if (!supabaseUrl) {
+    console.warn("Supabase not configured, using mock authentication");
+    return { data: { user: { id: 'mock-user-id', email } }, error: null };
+  }
+  return await supabase.auth.signUp({ email, password, options: { data: metadata } });
 };
 
 export const signOut = async () => {
+  if (!supabaseUrl) {
+    console.warn("Supabase not configured, using mock authentication");
+    return { error: null };
+  }
   return await supabase.auth.signOut();
+};
+
+export const getCurrentUser = async () => {
+  if (!supabaseUrl) {
+    console.warn("Supabase not configured, using mock user");
+    // Return mock user for development
+    return { id: 'mock-user-id', email: 'test@example.com' };
+  }
+  
+  try {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) throw error;
+    return data.user;
+  } catch (error) {
+    console.error("Error getting current user:", error);
+    return null;
+  }
 };
