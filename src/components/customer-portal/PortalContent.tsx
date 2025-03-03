@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
@@ -95,21 +96,6 @@ const PortalContent = ({
     }
   };
 
-  const goToAdminPortal = () => {
-    localStorage.removeItem("adminAuth");
-    
-    if (user && user.email === "beale122@gmail.com") {
-      localStorage.setItem("adminEmail", user.email);
-      
-      toast({
-        title: "Redirecting to admin portal",
-        description: "Use your customer portal credentials to log in",
-      });
-    }
-    
-    window.location.href = '/admin';
-  };
-
   return (
     <>
       <PortalHeader 
@@ -117,7 +103,6 @@ const PortalContent = ({
         onLogout={onLogout}
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        onAdminClick={goToAdminPortal}
         isAdmin={user?.email === "beale122@gmail.com"}
       />
       
@@ -172,6 +157,11 @@ const PortalContent = ({
           />
         </TabsContent>
       </PortalTabs>
+      
+      {/* Add a discrete footer with copyright at the very bottom */}
+      <div className="text-center text-xs text-gray-400 mt-12 pb-20 md:pb-4">
+        © 2024 GPS Plumbing. All rights reserved.
+      </div>
     </>
   );
 };

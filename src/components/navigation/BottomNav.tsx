@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { isClerkAvailable } from "./ClerkUtil";
 import { SignedIn } from "@clerk/clerk-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface BottomNavProps {
   isAdminRoute?: boolean;
@@ -44,10 +45,10 @@ export const BottomNav = ({ isAdminRoute }: BottomNavProps) => {
         ))}
       </div>
       
-      {/* Render protected items if user is signed in or Clerk is not available */}
+      {/* Regular protected items */}
       {clerkAvailable ? (
         <SignedIn>
-          <div className="grid grid-cols-2 w-full border-t border-gray-100">
+          <div className="grid grid-cols-1 w-full border-t border-gray-100">
             {protectedItems.map((item) => (
               <NavLink
                 key={item.href}
@@ -57,18 +58,10 @@ export const BottomNav = ({ isAdminRoute }: BottomNavProps) => {
                 isBottomNav
               />
             ))}
-            <NavLink
-              key={adminItem.href}
-              href={adminItem.href}
-              label={adminItem.label}
-              icon={adminItem.icon}
-              isBottomNav
-              className={isAdminRoute ? "bg-indigo-100" : ""}
-            />
           </div>
         </SignedIn>
       ) : (
-        <div className="grid grid-cols-2 w-full border-t border-gray-100">
+        <div className="grid grid-cols-1 w-full border-t border-gray-100">
           {protectedItems.map((item) => (
             <NavLink
               key={item.href}
@@ -78,14 +71,31 @@ export const BottomNav = ({ isAdminRoute }: BottomNavProps) => {
               isBottomNav
             />
           ))}
-          <NavLink
-            key={adminItem.href}
-            href={adminItem.href}
-            label={adminItem.label}
-            icon={adminItem.icon}
-            isBottomNav
-            className={isAdminRoute ? "bg-indigo-100" : ""}
-          />
+        </div>
+      )}
+      
+      {/* Discreet admin button at the bottom */}
+      {((!clerkAvailable) || (clerkAvailable && location.pathname.includes('customer-portal'))) && (
+        <div className="border-t border-gray-100 py-1">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex justify-center">
+                  <NavLink
+                    key="admin-discreet"
+                    href="/admin"
+                    label=""
+                    className="text-gray-400 hover:text-gray-600 py-1"
+                  >
+                    <Shield className="h-4 w-4" />
+                  </NavLink>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Admin Access</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Home, FileCheck, Receipt, HelpCircle, Menu, User, Shield } from "lucide-react";
+import { Home, FileCheck, Receipt, HelpCircle, Menu, User } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 
@@ -33,7 +33,7 @@ const PortalHeader = ({
               {userName ? `${userName}'s Portal` : 'Customer Portal'}
               {isAdmin && (
                 <Badge variant="outline" className="ml-2 bg-indigo-100 text-indigo-800 border-indigo-300">
-                  <Shield className="h-3 w-3 mr-1" /> Admin
+                  Admin
                 </Badge>
               )}
             </h1>
@@ -42,17 +42,6 @@ const PortalHeader = ({
         </div>
         
         <div className="flex items-center gap-2">
-          {isAdmin && (
-            <Button 
-              onClick={onAdminClick} 
-              variant="outline" 
-              className="bg-indigo-100 hover:bg-indigo-200 border-indigo-300 text-indigo-800 hidden sm:flex"
-            >
-              <Shield className="h-4 w-4 mr-2 text-indigo-600" />
-              Admin Portal
-            </Button>
-          )}
-          
           <Button variant="outline" onClick={onLogout}>
             Log out
           </Button>
@@ -121,20 +110,6 @@ const PortalHeader = ({
                   <User className="h-5 w-5 mr-2" />
                   Profile
                 </Button>
-                
-                {isAdmin && onAdminClick && (
-                  <Button
-                    variant="outline"
-                    className="justify-start bg-indigo-100 hover:bg-indigo-200 border-indigo-300 text-indigo-800 mt-2"
-                    onClick={() => {
-                      onAdminClick();
-                      setMenuOpen(false);
-                    }}
-                  >
-                    <Shield className="h-5 w-5 mr-2 text-indigo-600" />
-                    Admin Portal
-                  </Button>
-                )}
               </div>
             </SheetContent>
           </Sheet>
