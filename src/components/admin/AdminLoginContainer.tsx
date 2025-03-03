@@ -8,13 +8,19 @@ interface AdminLoginContainerProps {
 
 const AdminLoginContainer = ({ onLogin }: AdminLoginContainerProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 to-slate-900">
-      <div className="bg-slate-900 border-b border-slate-700 shadow-md">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-950">
+      <div className="bg-slate-950 border-b border-indigo-900/30 shadow-lg">
         <Navigation />
       </div>
-      <div className="container mx-auto max-w-md py-12">
-        <h1 className="text-3xl font-bold text-center mb-8 text-white">Admin Portal</h1>
-        <AdminLogin onLogin={onLogin} />
+      <div className="container mx-auto max-w-md py-16">
+        <div className="bg-slate-900/80 border border-indigo-900/20 rounded-xl shadow-xl p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Admin Portal</h1>
+            <div className="w-16 h-1 bg-indigo-600 mx-auto rounded-full"></div>
+            <p className="text-indigo-400 mt-4">Secure admin access required</p>
+          </div>
+          <AdminLogin onLogin={onLogin} />
+        </div>
       </div>
     </div>
   );
