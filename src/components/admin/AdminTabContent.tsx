@@ -1,6 +1,6 @@
 
+import React, { useEffect, useState, useCallback } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEffect, useState, useCallback } from "react";
 import CustomerList from "@/components/admin/CustomerList";
 import DocumentUpload from "@/components/admin/DocumentUpload";
 import DashboardOverview from "@/components/admin/dashboard/DashboardOverview";
