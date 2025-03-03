@@ -110,12 +110,11 @@ export const fetchCertificates = async (userId: string) => {
       return mockCertificates;
     }
     
-    const response = await supabase
+    const { data, error } = await supabase
       .from('certificates')
       .select('*')
       .eq('user_id', userId);
       
-    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockCertificates;
   } catch (error) {
@@ -158,12 +157,11 @@ export const fetchInvoices = async (userId: string) => {
       return mockInvoices;
     }
     
-    const response = await supabase
+    const { data, error } = await supabase
       .from('invoices')
       .select('*')
       .eq('user_id', userId);
       
-    const { data, error } = response;
     if (error) throw error;
     return data.length ? data : mockInvoices;
   } catch (error) {
