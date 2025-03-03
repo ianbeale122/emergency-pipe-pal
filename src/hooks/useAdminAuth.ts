@@ -22,7 +22,7 @@ export const useAdminAuth = () => {
     setIsLoading(false);
   }, []);
 
-  const handleLogin = (email: string, password: string, rememberMe: boolean) => {
+  const handleLogin = (email: string, password: string, rememberMe: boolean): boolean => {
     console.log("Login attempt:", { email, password, rememberMe });
     
     if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
@@ -43,34 +43,6 @@ export const useAdminAuth = () => {
         const inactivityTimeout = 2 * 60 * 60 * 1000; // 2 hours
         const logoutTime = Date.now() + inactivityTimeout;
         localStorage.setItem("adminLogoutTime", logoutTime.toString());
-        
-        // Check for timeout periodically
-        const checkTimeout = () => {
-          const storedLogoutTime = localStorage.getItem("adminLogoutTime");
-          if (storedLogoutTime && Date.now() > parseInt(storedLogoutTime)) {
-            handleLogout();
-          }
-        };
-        
-        // Set up check every minute
-        const timeoutInterval = setInterval(checkTimeout, 60 * 1000);
-        
-        // Reset timeout on user activity
-        const resetTimeout = () => {
-          const newLogoutTime = Date.now() + inactivityTimeout;
-          localStorage.setItem("adminLogoutTime", newLogoutTime.toString());
-        };
-        
-        // Add event listeners to track user activity
-        window.addEventListener('mousemove', resetTimeout);
-        window.addEventListener('keydown', resetTimeout);
-        
-        // Clean up on logout
-        return () => {
-          clearInterval(timeoutInterval);
-          window.removeEventListener('mousemove', resetTimeout);
-          window.removeEventListener('keydown', resetTimeout);
-        };
       }
       
       return true;
