@@ -16,11 +16,11 @@ interface StatusFilterProps {
   };
 }
 
-const StatusFilter: React.FC<StatusFilterProps> = ({ 
+const StatusFilter = memo(({ 
   selectedStatus, 
   onStatusChange,
   counts
-}) => {
+}: StatusFilterProps) => {
   const statuses: {
     id: StatusFilterType;
     label: string;
@@ -58,4 +58,4 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
 
 StatusFilter.displayName = 'StatusFilter';
 
-export default memo(StatusFilter);
+export default StatusFilter;
