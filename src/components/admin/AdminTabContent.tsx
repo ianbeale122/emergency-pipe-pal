@@ -42,10 +42,10 @@ const AdminTabContent = ({
 
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-        <TabsTrigger value="customers">Customers</TabsTrigger>
-        <TabsTrigger value="upload">Upload Documents</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-3 bg-slate-700 text-slate-200">
+        <TabsTrigger value="dashboard" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white">Dashboard</TabsTrigger>
+        <TabsTrigger value="customers" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white">Customers</TabsTrigger>
+        <TabsTrigger value="upload" className="data-[state=active]:bg-slate-900 data-[state=active]:text-white">Upload Documents</TabsTrigger>
       </TabsList>
       
       <TabsContent value="dashboard">
@@ -57,7 +57,7 @@ const AdminTabContent = ({
         />
       </TabsContent>
       
-      <TabsContent value="customers" className="bg-white rounded-lg shadow p-6">
+      <TabsContent value="customers" className="bg-slate-800 rounded-lg shadow p-6 text-white">
         {isLoadingCustomers ? (
           <div className="text-center py-8">Loading customers...</div>
         ) : (
@@ -65,7 +65,7 @@ const AdminTabContent = ({
         )}
       </TabsContent>
       
-      <TabsContent value="upload" className="bg-white rounded-lg shadow">
+      <TabsContent value="upload" className="bg-slate-800 rounded-lg shadow">
         <DocumentUpload 
           customers={customers} 
           onUploadSuccess={onUploadSuccess} 
