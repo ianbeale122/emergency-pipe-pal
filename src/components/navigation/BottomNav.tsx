@@ -1,5 +1,5 @@
 
-import { Home, FileQuestion, HelpCircle, CalendarClock, AlertTriangle } from "lucide-react";
+import { Home, FileQuestion, HelpCircle, CalendarClock, AlertTriangle, LogIn } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { isClerkAvailable } from "./ClerkUtil";
@@ -11,6 +11,8 @@ interface BottomNavProps {
 
 export const BottomNav = ({ isAdminRoute }: BottomNavProps) => {
   const clerkAvailable = isClerkAvailable();
+  const location = useLocation();
+  const isAtPortal = location.pathname === "/customer-portal";
 
   // Define navigation items with their icons
   const navItems = [
@@ -34,6 +36,18 @@ export const BottomNav = ({ isAdminRoute }: BottomNavProps) => {
           />
         ))}
       </div>
+      
+      {/* Login button (only if not on portal page) */}
+      {!isAtPortal && (
+        <div className="grid grid-cols-1 w-full border-t border-gray-100">
+          <NavLink
+            href="/customer-portal"
+            label="Login"
+            icon={LogIn}
+            isBottomNav
+          />
+        </div>
+      )}
     </div>
   );
 };

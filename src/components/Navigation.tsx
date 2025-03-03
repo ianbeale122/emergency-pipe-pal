@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Shield, User } from "lucide-react";
+import { Menu, X, Shield, User, LogIn } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { SignedIn, UserButton } from "@clerk/clerk-react";
@@ -19,6 +19,7 @@ export const Navigation = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isPortalRoute = location.pathname.startsWith('/customer-portal');
+  const isAtPortal = location.pathname === "/customer-portal";
 
   const links = [
     { href: "/", label: "Home" },
@@ -26,7 +27,6 @@ export const Navigation = () => {
     { href: "/chat", label: "Help" },
     { href: "/annual-service", label: "Annual Service" },
     { href: "/emergency", label: "Emergency" },
-    { href: "/customer-portal", label: "Customer Portal", icon: User },
   ];
 
   useEffect(() => {
@@ -65,8 +65,24 @@ export const Navigation = () => {
               )}
             </Link>
             
-            {/* Admin Button removed from mobile top nav */}
+            {/* Mobile top nav */}
             <div className="flex items-center md:hidden">
+              {/* Login icon button for mobile */}
+              {!isAtPortal && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link to="/customer-portal" className="mr-3">
+                        <LogIn className="h-5 w-5 text-primary" />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Login</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              
               {clerkAvailable && (
                 <SignedIn>
                   <UserButton afterSignOutUrl="/" />
@@ -90,6 +106,11 @@ export const Navigation = () => {
               adminLink={null}
               clerkAvailable={clerkAvailable}
               isAdminRoute={isAdminRoute}
+              loginButton={!isAtPortal ? {
+                href: "/customer-portal",
+                icon: LogIn,
+                tooltip: "Login"
+              } : null}
             />
           </div>
 
