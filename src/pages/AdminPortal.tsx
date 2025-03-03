@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import DocumentUpload from "@/components/admin/DocumentUpload";
 import CustomerList from "@/components/admin/CustomerList";
 import AdminLogin from "@/components/admin/AdminLogin";
+import { supabase } from "@/lib/supabase";
 
 // This would typically come from your database
 const ADMIN_CREDENTIALS = {
@@ -14,17 +15,18 @@ const ADMIN_CREDENTIALS = {
   password: "admin123" // In a real app, use a proper authentication system
 };
 
-// Mock customer data - in a real app, this would come from your database
-const mockCustomers = [
-  { id: "cust_001", full_name: "John Smith", email: "john@example.com" },
-  { id: "cust_002", full_name: "Sarah Johnson", email: "sarah@example.com" },
-  { id: "cust_003", full_name: "Michael Brown", email: "michael@example.com" },
-];
+type Customer = {
+  id: string;
+  full_name: string;
+  email: string;
+};
 
 const AdminPortal = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("customers");
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [isLoadingCustomers, setIsLoadingCustomers] = useState(false);
   const { toast } = useToast();
 
   // Check if admin is logged in via localStorage (basic approach)
@@ -35,6 +37,38 @@ const AdminPortal = () => {
     }
     setIsLoading(false);
   }, []);
+
+  // Fetch customers from Supabase when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchCustomers();
+    }
+  }, [isAuthenticated]);
+
+  const fetchCustomers = async () => {
+    setIsLoadingCustomers(true);
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('id, full_name, email')
+        .order('full_name', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      setCustomers(data || []);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load customers. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingCustomers(false);
+    }
+  };
 
   const handleLogin = (email: string, password: string) => {
     if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
@@ -106,12 +140,16 @@ const AdminPortal = () => {
           </TabsList>
           
           <TabsContent value="customers" className="bg-white rounded-lg shadow p-6">
-            <CustomerList customers={mockCustomers} />
+            {isLoadingCustomers ? (
+              <div className="text-center py-8">Loading customers...</div>
+            ) : (
+              <CustomerList customers={customers} />
+            )}
           </TabsContent>
           
           <TabsContent value="upload" className="bg-white rounded-lg shadow">
             <DocumentUpload 
-              customers={mockCustomers} 
+              customers={customers} 
               onUploadSuccess={handleUploadSuccess} 
             />
           </TabsContent>
