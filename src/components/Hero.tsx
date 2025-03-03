@@ -1,6 +1,5 @@
 
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
 
 export const Hero = () => {
   return (
@@ -17,17 +16,6 @@ export const Hero = () => {
             boiler service, repairs, and installations.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Button
-              size="lg"
-              variant="destructive"
-              className="gap-2"
-              asChild
-            >
-              <a href="tel:+1234567890">
-                <Phone className="h-5 w-5" />
-                Emergency Service
-              </a>
-            </Button>
             <Button
               size="lg"
               variant="outline"

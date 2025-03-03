@@ -1,6 +1,5 @@
 
 import { BookingForm } from "@/components/BookingForm";
-import { EmergencyButton } from "@/components/EmergencyButton";
 import { Hero } from "@/components/Hero";
 import { Navigation } from "@/components/Navigation";
 import { Services } from "@/components/Services";
@@ -147,8 +146,7 @@ const Index = () => {
       <Services />
       <BookingForm />
       
-      {/* Adjust emergency button to be above the bottom navigation on mobile */}
-      <EmergencyButton className="mb-16 sm:mb-6" />
+      {/* Remove the emergency button */}
       
       {/* Add padding at the bottom for the bottom navigation on mobile */}
       <div className="h-16 md:h-0"></div>
