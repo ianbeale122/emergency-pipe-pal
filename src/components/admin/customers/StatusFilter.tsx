@@ -3,6 +3,7 @@ import React, { memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { BadgeCheck, Clock, XCircle, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { StatusFilterType } from './types';
 
 interface StatusFilterProps {
   selectedStatus: string;

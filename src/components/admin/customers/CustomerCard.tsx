@@ -1,4 +1,5 @@
 
+import React, { memo } from 'react';
 import { User, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CustomerDetails from './CustomerDetails';
@@ -11,7 +12,7 @@ interface CustomerCardProps {
   toggleExpand: (customerId: string) => void;
 }
 
-const CustomerCard = ({ customer, expandedCustomer, toggleExpand }: CustomerCardProps) => {
+const CustomerCard = memo(({ customer, expandedCustomer, toggleExpand }: CustomerCardProps) => {
   const extendedData = mockCustomerExtendedData[customer.id] || {};
   const isExpanded = expandedCustomer === customer.id;
   
@@ -50,6 +51,8 @@ const CustomerCard = ({ customer, expandedCustomer, toggleExpand }: CustomerCard
       />
     </div>
   );
-};
+});
+
+CustomerCard.displayName = 'CustomerCard';
 
 export default CustomerCard;

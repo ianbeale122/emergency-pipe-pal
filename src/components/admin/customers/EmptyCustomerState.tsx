@@ -1,14 +1,35 @@
 
-import { User } from 'lucide-react';
+import React from 'react';
+import { Search, Users } from 'lucide-react';
 
-const EmptyCustomerState = () => {
+interface EmptyCustomerStateProps {
+  searchTerm: string;
+}
+
+const EmptyCustomerState: React.FC<EmptyCustomerStateProps> = ({ searchTerm }) => {
   return (
-    <div className="text-center py-10">
-      <User className="h-12 w-12 mx-auto text-indigo-400 opacity-30 mb-4" />
-      <h3 className="text-lg font-medium text-white">No customers found</h3>
-      <p className="text-indigo-300">Try adjusting your search term or filters</p>
+    <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+      {searchTerm ? (
+        <>
+          <Search className="h-12 w-12 text-slate-500 mb-4" />
+          <h3 className="text-xl font-medium text-white mb-2">No customers found</h3>
+          <p className="text-slate-400 max-w-md">
+            We couldn't find any customers matching "{searchTerm}".
+            Try a different search term or clear the search.
+          </p>
+        </>
+      ) : (
+        <>
+          <Users className="h-12 w-12 text-slate-500 mb-4" />
+          <h3 className="text-xl font-medium text-white mb-2">No customers</h3>
+          <p className="text-slate-400 max-w-md">
+            There are no customers in the selected category.
+            Try selecting a different status filter.
+          </p>
+        </>
+      )}
     </div>
   );
 };
 
-export default EmptyCustomerState;
+export default React.memo(EmptyCustomerState);

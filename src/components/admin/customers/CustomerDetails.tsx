@@ -1,4 +1,5 @@
 
+import React, { memo } from 'react';
 import { Phone, MapPin, Calendar, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CustomerExtendedData } from './types';
@@ -8,7 +9,7 @@ interface CustomerDetailsProps {
   isExpanded: boolean;
 }
 
-const CustomerDetails = ({ extendedData, isExpanded }: CustomerDetailsProps) => {
+const CustomerDetails = memo(({ extendedData, isExpanded }: CustomerDetailsProps) => {
   return (
     <div className={`mt-4 overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
       <div className="pt-4 border-t border-slate-700 grid gap-3 text-sm">
@@ -57,6 +58,8 @@ const CustomerDetails = ({ extendedData, isExpanded }: CustomerDetailsProps) => 
       </div>
     </div>
   );
-};
+});
+
+CustomerDetails.displayName = 'CustomerDetails';
 
 export default CustomerDetails;

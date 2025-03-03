@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Customer } from '@/hooks/useAdminData';
 import CustomerCard from '@/components/admin/customers/CustomerCard';
 import CustomerSearch from '@/components/admin/customers/CustomerSearch';
@@ -20,13 +20,13 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
 
-  // Count customers by mocked status
-  const countByStatus = {
+  // Count customers by status - memoized to prevent unnecessary recalculations
+  const countByStatus = useMemo(() => ({
     all: customers.length,
     active: customers.filter(c => mockCustomerExtendedData[c.id]?.status === 'active').length,
     pending: customers.filter(c => mockCustomerExtendedData[c.id]?.status === 'pending').length,
     inactive: customers.filter(c => mockCustomerExtendedData[c.id]?.status === 'inactive').length,
-  };
+  }), [customers]);
 
   const toggleExpand = useCallback((customerId: string) => {
     setExpandedCustomer(prev => prev === customerId ? null : customerId);
@@ -47,7 +47,8 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
     }
   }, [sortBy]);
 
-  const filteredCustomers = customers
+  // Memoized filtered customers to prevent unnecessary re-renders
+  const filteredCustomers = useMemo(() => customers
     .filter(customer => {
       // Filter by search term
       const searchMatch = 
@@ -76,7 +77,7 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
         default:
           return 0;
       }
-    });
+    }), [customers, searchTerm, statusFilter, sortBy, sortDirection]);
 
   return (
     <div className="space-y-6">
@@ -137,4 +138,4 @@ const CustomerList: React.FC<CustomerListProps> = ({ customers }) => {
   );
 };
 
-export default CustomerList;
+export default React.memo(CustomerList);

@@ -9,8 +9,8 @@ export type CustomerExtendedData = {
   phone?: string;
   address?: string;
   joinDate?: string;
-  status?: 'active' | 'inactive';
+  status?: 'active' | 'pending' | 'inactive';
   lastService?: string;
 };
 
-export type StatusFilterType = 'all' | 'active' | 'inactive';
+export type StatusFilterType = 'all' | 'active' | 'pending' | 'inactive';
