@@ -9,7 +9,7 @@ interface DesktopNavProps {
   adminLink: { href: string; label: React.ReactNode } | null;
   clerkAvailable: boolean;
   isAdminRoute?: boolean;
-  loginButton: {
+  loginButton?: {
     href: string;
     icon: any;
     tooltip: string;
