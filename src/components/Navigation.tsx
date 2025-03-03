@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X, Shield, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { SignedIn, UserButton } from "@clerk/clerk-react";
@@ -18,6 +18,7 @@ export const Navigation = () => {
   const clerkAvailable = isClerkAvailable();
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isPortalRoute = location.pathname.startsWith('/customer-portal');
 
   const links = [
     { href: "/", label: "Home" },
@@ -25,11 +26,7 @@ export const Navigation = () => {
     { href: "/chat", label: "Help" },
     { href: "/annual-service", label: "Annual Service" },
     { href: "/emergency", label: "Emergency" },
-  ];
-
-  // Protected link that only shows when signed in or when Clerk is not available
-  const protectedLinks = [
-    { href: "/customer-portal", label: "Customer Portal" },
+    { href: "/customer-portal", label: "Customer Portal", icon: User },
   ];
 
   useEffect(() => {
@@ -61,6 +58,11 @@ export const Navigation = () => {
                   Admin Portal
                 </Badge>
               )}
+              {isPortalRoute && (
+                <Badge className="ml-2 bg-blue-600 text-white">
+                  Customer Portal
+                </Badge>
+              )}
             </Link>
             
             {/* Admin Button removed from mobile top nav */}
@@ -84,7 +86,7 @@ export const Navigation = () => {
             {/* Desktop Navigation */}
             <DesktopNav 
               links={links} 
-              protectedLinks={protectedLinks}
+              protectedLinks={[]}
               adminLink={null}
               clerkAvailable={clerkAvailable}
               isAdminRoute={isAdminRoute}
@@ -95,7 +97,7 @@ export const Navigation = () => {
           <MobileMenu
             isOpen={isMenuOpen}
             links={links}
-            protectedLinks={protectedLinks}
+            protectedLinks={[]}
             adminLink={null}
             clerkAvailable={clerkAvailable}
             isAdminRoute={isAdminRoute}

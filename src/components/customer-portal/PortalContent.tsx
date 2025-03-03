@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
@@ -160,11 +159,9 @@ const PortalContent = ({
         </TabsContent>
       </PortalTabs>
       
-      {/* Add a discrete footer with copyright at the very bottom */}
       <div className="text-center text-xs text-gray-400 mt-12 pb-20 md:pb-4">
         © 2024 GPS Plumbing. All rights reserved.
         
-        {/* Admin access link - very discreet at the bottom */}
         <div className="mt-8 mb-4 opacity-30 hover:opacity-60 transition-opacity">
           <Link 
             to="/admin" 
