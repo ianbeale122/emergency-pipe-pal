@@ -1,4 +1,3 @@
-
 import { supabase } from "@/lib/supabase";
 
 // Types
@@ -26,7 +25,7 @@ export interface Invoice {
 export const fetchUserProfile = async (userId: string): Promise<UserProfile | null> => {
   try {
     // Check if Supabase is configured by checking URL
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, using mock profile data");
@@ -56,10 +55,13 @@ export const fetchUserProfile = async (userId: string): Promise<UserProfile | nu
   }
 };
 
+// Add the missing supabaseUrl variable
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+
 export const updateUserProfile = async (profile: UserProfile): Promise<UserProfile | null> => {
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, profile update simulated");
@@ -104,7 +106,7 @@ export const fetchCertificates = async (userId: string) => {
   
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, using mock certificate data");
@@ -151,7 +153,7 @@ export const fetchInvoices = async (userId: string) => {
   
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, using mock invoice data");
@@ -164,7 +166,7 @@ export const fetchInvoices = async (userId: string) => {
       .eq('user_id', userId);
       
     if (error) throw error;
-    return data.length ? data : mockInvoices;
+    return data?.length ? data : mockInvoices;
   } catch (error) {
     console.error("Error fetching invoices:", error);
     return mockInvoices;
@@ -208,23 +210,19 @@ export const fetchAllInvoices = async (): Promise<Invoice[]> => {
   
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, using mock invoice data");
       return mockInvoices;
     }
     
-    // Modified to await the promise directly
-    const result = await supabase
+    const { data, error } = await supabase
       .from('invoices')
       .select('*');
-    
-    // Now the result is properly resolved and has data/error properties
-    const { data, error } = result;
       
     if (error) throw error;
-    return data.length ? data : mockInvoices;
+    return data?.length ? data : mockInvoices;
   } catch (error) {
     console.error("Error fetching all invoices:", error);
     return mockInvoices;
@@ -254,23 +252,19 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
   
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, using mock user data");
       return mockUsers;
     }
     
-    // Modified to await the promise directly
-    const result = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('*');
-    
-    // Now the result is properly resolved and has data/error properties
-    const { data, error } = result;
       
     if (error) throw error;
-    return data.length ? data : mockUsers;
+    return data?.length ? data : mockUsers;
   } catch (error) {
     console.error("Error fetching all users:", error);
     return mockUsers;
@@ -280,7 +274,7 @@ export const fetchAllUsers = async (): Promise<UserProfile[]> => {
 export const createInvoice = async (invoice: Omit<Invoice, 'id'>): Promise<{ success: boolean; id?: string; error?: string }> => {
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, simulating invoice creation");
@@ -303,7 +297,7 @@ export const createInvoice = async (invoice: Omit<Invoice, 'id'>): Promise<{ suc
 export const updateInvoice = async (id: string, invoice: Partial<Invoice>): Promise<{ success: boolean; error?: string }> => {
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, simulating invoice update");
@@ -327,7 +321,7 @@ export const updateInvoice = async (id: string, invoice: Partial<Invoice>): Prom
 export const deleteInvoice = async (id: string): Promise<{ success: boolean; error?: string }> => {
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, simulating invoice deletion");
@@ -382,23 +376,19 @@ export const fetchFaqVideos = async () => {
   
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, using mock FAQ video data");
       return mockVideos;
     }
     
-    // Modified to await the promise directly
-    const result = await supabase
+    const { data, error } = await supabase
       .from('faq_videos')
       .select('*');
-    
-    // Now the result is properly resolved and has data/error properties
-    const { data, error } = result;
       
     if (error) throw error;
-    return data.length ? data : mockVideos;
+    return data?.length ? data : mockVideos;
   } catch (error) {
     console.error("Error fetching FAQ videos:", error);
     return mockVideos;
@@ -409,7 +399,7 @@ export const downloadCertificate = async (id: string) => {
   // Mock data for when Supabase isn't configured
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, returning mock download URL");
@@ -436,7 +426,7 @@ export const downloadInvoice = async (id: string) => {
   // Mock data for when Supabase isn't configured
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, returning mock download URL");
@@ -459,10 +449,75 @@ export const downloadInvoice = async (id: string) => {
   }
 };
 
+// Now let's add file upload functionality for the admin area
+export const uploadCustomerDocument = async (
+  file: File, 
+  userId: string, 
+  documentType: 'certificate' | 'invoice',
+  metadata: object
+): Promise<{ success: boolean; url?: string; id?: string; error?: string }> => {
+  try {
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!(supabaseUrl);
+    
+    if (!isSupabaseConfigured) {
+      console.warn("Supabase not configured, simulating document upload");
+      return { 
+        success: true, 
+        url: URL.createObjectURL(file),
+        id: `${documentType.toUpperCase()}-${Math.floor(Math.random() * 1000)}`
+      };
+    }
+    
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${userId}/${documentType}-${Date.now()}.${fileExt}`;
+    const bucket = documentType === 'certificate' ? 'certificates' : 'invoices';
+    
+    // Upload the file to Supabase Storage
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, file);
+      
+    if (uploadError) throw uploadError;
+    
+    // Get the public URL
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(fileName);
+      
+    // Create a record in the database
+    const documentId = `${documentType.toUpperCase()}-${Date.now()}`;
+    const tableName = documentType === 'certificate' ? 'certificates' : 'invoices';
+    
+    const documentData = {
+      id: documentId,
+      user_id: userId,
+      file_path: fileName,
+      ...metadata
+    };
+    
+    const { error: dbError } = await supabase
+      .from(tableName)
+      .insert([documentData]);
+      
+    if (dbError) throw dbError;
+    
+    return { 
+      success: true, 
+      url: urlData.publicUrl,
+      id: documentId
+    };
+    
+  } catch (error: any) {
+    console.error(`Error uploading ${file.name}:`, error);
+    return { success: false, error: error.message || `Failed to upload ${file.name}` };
+  }
+};
+
 export const submitIssue = async (issue: any) => {
   try {
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!(supabase && 'url' in supabase);
+    const isSupabaseConfigured = !!(supabaseUrl);
     
     if (!isSupabaseConfigured) {
       console.warn("Supabase not configured, simulating issue submission");

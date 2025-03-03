@@ -17,14 +17,20 @@ export const supabase = supabaseUrl
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
       },
       from: () => ({
-        select: () => ({
-          eq: () => Promise.resolve({ data: [], error: null }),
-          order: () => ({
+        select: () => {
+          const selectResult = {
             eq: () => Promise.resolve({ data: [], error: null }),
-          }),
-          // Make the select function also return a Promise directly for when it's awaited without eq
-          then: (resolve) => resolve({ data: [], error: null }),
-        }),
+            order: () => ({
+              eq: () => Promise.resolve({ data: [], error: null }),
+            }),
+          };
+          
+          // Add Promise compatibility for direct awaits
+          return Object.assign(
+            Promise.resolve({ data: [], error: null }),
+            selectResult
+          );
+        },
         insert: () => Promise.resolve({ data: null, error: null }),
         update: () => ({ 
           eq: () => Promise.resolve({ data: null, error: null }) 
@@ -36,6 +42,8 @@ export const supabase = supabaseUrl
       storage: {
         from: () => ({
           download: () => Promise.resolve({ data: null, error: null }),
+          upload: () => Promise.resolve({ data: null, error: null }),
+          getPublicUrl: () => ({ data: { publicUrl: '' } }),
         }),
       },
     };

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Lock, Mail } from "lucide-react";
+import { User, Lock, Mail, Phone } from "lucide-react";
 import { signIn, signUp } from "@/lib/supabase";
 import { updateUserProfile } from "@/api/portal";
 import { useToast } from "@/components/ui/use-toast";
@@ -18,6 +18,7 @@ const PortalLogin = ({ onSuccess }: PortalLoginProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   
@@ -69,7 +70,7 @@ const PortalLogin = ({ onSuccess }: PortalLoginProps) => {
     if (!email || !password || !name) {
       toast({
         title: "Error",
-        description: "Please fill in all fields",
+        description: "Please fill in all required fields",
         variant: "destructive",
         duration: 3000,
       });
@@ -89,7 +90,7 @@ const PortalLogin = ({ onSuccess }: PortalLoginProps) => {
           user_id: data.user.id,
           full_name: name,
           address: "",
-          phone: "",
+          phone: phone,
           created_at: new Date().toISOString(),
           is_admin: false
         });
@@ -169,7 +170,7 @@ const PortalLogin = ({ onSuccess }: PortalLoginProps) => {
         <TabsContent value="register">
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -185,7 +186,7 @@ const PortalLogin = ({ onSuccess }: PortalLoginProps) => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email-register">Email</Label>
+              <Label htmlFor="email-register">Email <span className="text-red-500">*</span></Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -201,7 +202,22 @@ const PortalLogin = ({ onSuccess }: PortalLoginProps) => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password-register">Password</Label>
+              <Label htmlFor="phone">Phone Number</Label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+44 123 456789"
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password-register">Password <span className="text-red-500">*</span></Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -214,6 +230,7 @@ const PortalLogin = ({ onSuccess }: PortalLoginProps) => {
                   required
                 />
               </div>
+              <p className="text-xs text-muted-foreground">Password must be at least 6 characters</p>
             </div>
             
             <Button type="submit" className="w-full" disabled={isLoading}>
