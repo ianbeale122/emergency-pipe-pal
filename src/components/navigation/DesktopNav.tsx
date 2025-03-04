@@ -19,11 +19,27 @@ interface DesktopNavProps {
 }
 
 export const DesktopNav = ({ 
+  links,
+  protectedLinks,
+  adminLink,
   clerkAvailable, 
   isAdminRoute
 }: DesktopNavProps) => {
   return (
     <div className="hidden md:flex items-center space-x-4">
+      {/* Regular navigation links */}
+      <div className="flex items-center space-x-1">
+        {links.map((link) => (
+          <NavLink
+            key={link.href}
+            href={link.href}
+            label={link.label}
+          />
+        ))}
+      </div>
+      
+      <div className="border-l border-gray-200 h-6 mx-2"></div>
+      
       {/* Customer Portal Button */}
       <Link
         to="/customer-portal"

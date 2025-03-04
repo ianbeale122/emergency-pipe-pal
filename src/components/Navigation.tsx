@@ -83,7 +83,7 @@ export const Navigation = () => {
               </Button>
             </div>
             
-            {/* Desktop Navigation - simplified */}
+            {/* Desktop Navigation */}
             <DesktopNav 
               links={links}
               protectedLinks={[]}
