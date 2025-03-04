@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -76,7 +77,7 @@ export const Navigation = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="sm:hidden ml-2"
+                className="ml-2"
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </Button>
@@ -84,7 +85,7 @@ export const Navigation = () => {
             
             {/* Desktop Navigation - simplified */}
             <DesktopNav 
-              links={[]}
+              links={links}
               protectedLinks={[]}
               adminLink={null}
               clerkAvailable={clerkAvailable}
