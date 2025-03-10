@@ -1,24 +1,42 @@
 
-import { Wrench, CalendarDays, Settings } from "lucide-react";
+import { Wrench, CalendarDays, Settings, Droplet, Home, Thermometer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const services = [
   {
     title: "Emergency Repairs",
     description:
-      "24/7 emergency plumbing service for urgent issues like burst pipes, boiler breakdowns, or flooding.",
+      "24/7 emergency plumbing services for urgent issues like burst pipes, leaks, blockages, and boiler breakdowns. Fast response times guaranteed.",
     icon: Wrench,
   },
   {
-    title: "Annual Boiler Service",
+    title: "Boiler Services",
     description:
-      "Comprehensive boiler maintenance to ensure efficiency and prevent unexpected breakdowns.",
+      "Expert boiler installations, repairs, and annual maintenance. We service all major brands and ensure your heating system runs efficiently and safely.",
+    icon: Thermometer,
+  },
+  {
+    title: "Bathroom Installations",
+    description:
+      "Complete bathroom installations and renovations, from design to completion. We handle plumbing, tiling, electrics, and finishing touches.",
+    icon: Droplet,
+  },
+  {
+    title: "Home Plumbing",
+    description:
+      "From leaky taps and toilet repairs to pipe replacements and water pressure issues. No job is too small for our experienced plumbers.",
+    icon: Home,
+  },
+  {
+    title: "Heating Systems",
+    description:
+      "Installation and maintenance of central heating systems, radiators, and underfloor heating solutions to keep your home warm and comfortable.",
     icon: CalendarDays,
   },
   {
-    title: "General Plumbing",
+    title: "Commercial Plumbing",
     description:
-      "From leaky taps to complete bathroom installations, we handle all plumbing needs.",
+      "Reliable commercial plumbing services for businesses, including planned maintenance, emergency repairs, and compliance testing.",
     icon: Settings,
   },
 ];
@@ -28,12 +46,12 @@ export const Services = () => {
     <section className="py-24 bg-white" id="services">
       <div className="container px-4">
         <div className="text-center mb-16 animate-fade-up">
-          <h2 className="text-3xl font-bold mb-4">Our Services</h2>
+          <h2 className="text-3xl font-bold mb-4">Our Comprehensive Services</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Professional plumbing services tailored to your needs, from emergency repairs to routine maintenance.
+            Professional plumbing and heating services delivered by experienced, Gas Safe registered engineers. All work guaranteed and fully insured.
           </p>
         </div>
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, index) => (
             <div
               key={service.title}

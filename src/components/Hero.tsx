@@ -10,15 +10,21 @@ export const Hero = () => {
       <div className="container px-4 py-32 text-center">
         <div className="animate-fade-up">
           <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-6xl">
-            Professional Plumbing Services
+            Trusted Local Plumbing Services
             <br />
-            <span className="text-primary">When You Need Them Most</span>
+            <span className="text-primary">For Your Home & Business</span>
           </h1>
           <p className="mx-auto mb-12 max-w-2xl text-lg text-gray-600">
-            Available 24/7 for emergencies. Expert plumbers ready to help with your
-            boiler service, repairs, and installations.
+            Available 24/7 for all your plumbing needs. From emergency repairs and boiler servicing to bathroom installations and heating systems.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <Button
+              size="lg"
+              className="gap-2"
+              asChild
+            >
+              <a href="#book-service">Call for Service</a>
+            </Button>
             <Button
               size="lg"
               variant="outline"
