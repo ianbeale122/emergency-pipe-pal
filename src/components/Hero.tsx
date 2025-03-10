@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { useMediaQuery } from "@/hooks/use-mobile";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const Hero = () => {
   const isDesktop = useMediaQuery("(min-width: 768px)");
